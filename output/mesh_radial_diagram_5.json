@@ -1,0 +1,5092 @@
+{
+  "metadata": {
+    "canvas_size": {
+      "width": 12591,
+      "height": 14553
+    },
+    "total_components": 48,
+    "total_connections": 286
+  },
+  "components": [
+    {
+      "id": "generator_1",
+      "type": "generator",
+      "voltage": 11000,
+      "position": {
+        "x": 334,
+        "y": 383,
+        "width": 100,
+        "height": 100
+      },
+      "connection_points": {
+        "left": {
+          "x": 334,
+          "y": 433
+        },
+        "right": {
+          "x": 434,
+          "y": 433
+        }
+      },
+      "connections": {
+        "left_connected_to": [],
+        "right_connected_to": [
+          "switch_2"
+        ]
+      }
+    },
+    {
+      "id": "switch_2",
+      "type": "switch",
+      "voltage": 66000,
+      "position": {
+        "x": 1801,
+        "y": 383,
+        "width": 100,
+        "height": 100
+      },
+      "connection_points": {
+        "left": {
+          "x": 1801,
+          "y": 433
+        },
+        "right": {
+          "x": 1901,
+          "y": 433
+        }
+      },
+      "connections": {
+        "left_connected_to": [
+          "generator_1"
+        ],
+        "right_connected_to": [
+          "transformer_3"
+        ]
+      }
+    },
+    {
+      "id": "transformer_3",
+      "type": "transformer",
+      "voltage": 22000,
+      "position": {
+        "x": 3268,
+        "y": 383,
+        "width": 100,
+        "height": 100
+      },
+      "connection_points": {
+        "left": {
+          "x": 3268,
+          "y": 433
+        },
+        "right": {
+          "x": 3368,
+          "y": 433
+        }
+      },
+      "connections": {
+        "left_connected_to": [
+          "switch_2"
+        ],
+        "right_connected_to": [
+          "transformer_4"
+        ]
+      }
+    },
+    {
+      "id": "transformer_4",
+      "type": "transformer",
+      "voltage": 1100,
+      "position": {
+        "x": 4735,
+        "y": 383,
+        "width": 100,
+        "height": 100
+      },
+      "connection_points": {
+        "left": {
+          "x": 4735,
+          "y": 433
+        },
+        "right": {
+          "x": 4835,
+          "y": 433
+        }
+      },
+      "connections": {
+        "left_connected_to": [
+          "transformer_3"
+        ],
+        "right_connected_to": [
+          "generator_5"
+        ]
+      }
+    },
+    {
+      "id": "generator_5",
+      "type": "generator",
+      "voltage": 66000,
+      "position": {
+        "x": 6202,
+        "y": 383,
+        "width": 100,
+        "height": 100
+      },
+      "connection_points": {
+        "left": {
+          "x": 6202,
+          "y": 433
+        },
+        "right": {
+          "x": 6302,
+          "y": 433
+        }
+      },
+      "connections": {
+        "left_connected_to": [
+          "transformer_4"
+        ],
+        "right_connected_to": [
+          "generator_6"
+        ]
+      }
+    },
+    {
+      "id": "generator_6",
+      "type": "generator",
+      "voltage": 66000,
+      "position": {
+        "x": 7669,
+        "y": 383,
+        "width": 100,
+        "height": 100
+      },
+      "connection_points": {
+        "left": {
+          "x": 7669,
+          "y": 433
+        },
+        "right": {
+          "x": 7769,
+          "y": 433
+        }
+      },
+      "connections": {
+        "left_connected_to": [
+          "generator_5"
+        ],
+        "right_connected_to": [
+          "breaker_7"
+        ]
+      }
+    },
+    {
+      "id": "breaker_7",
+      "type": "breaker",
+      "voltage": 4150,
+      "position": {
+        "x": 9136,
+        "y": 383,
+        "width": 100,
+        "height": 100
+      },
+      "connection_points": {
+        "left": {
+          "x": 9136,
+          "y": 433
+        },
+        "right": {
+          "x": 9236,
+          "y": 433
+        }
+      },
+      "connections": {
+        "left_connected_to": [
+          "generator_6"
+        ],
+        "right_connected_to": [
+          "load_8"
+        ]
+      }
+    },
+    {
+      "id": "load_8",
+      "type": "load",
+      "voltage": 480,
+      "position": {
+        "x": 10729,
+        "y": 383,
+        "width": 100,
+        "height": 100
+      },
+      "connection_points": {
+        "left": {
+          "x": 10729,
+          "y": 433
+        },
+        "right": {
+          "x": 10829,
+          "y": 433
+        }
+      },
+      "connections": {
+        "left_connected_to": [
+          "breaker_7"
+        ],
+        "right_connected_to": [
+          "bus_9"
+        ]
+      }
+    },
+    {
+      "id": "bus_9",
+      "type": "bus",
+      "voltage": 22000,
+      "position": {
+        "x": 12070,
+        "y": 383,
+        "width": 100,
+        "height": 100
+      },
+      "connection_points": {
+        "left": {
+          "x": 12070,
+          "y": 433
+        },
+        "right": {
+          "x": 12170,
+          "y": 433
+        }
+      },
+      "connections": {
+        "left_connected_to": [
+          "load_8"
+        ],
+        "right_connected_to": [
+          "breaker_10"
+        ]
+      }
+    },
+    {
+      "id": "breaker_10",
+      "type": "breaker",
+      "voltage": 4150,
+      "position": {
+        "x": 13672,
+        "y": 383,
+        "width": 100,
+        "height": 100
+      },
+      "connection_points": {
+        "left": {
+          "x": 13672,
+          "y": 433
+        },
+        "right": {
+          "x": 13772,
+          "y": 433
+        }
+      },
+      "connections": {
+        "left_connected_to": [
+          "bus_9"
+        ],
+        "right_connected_to": []
+      }
+    },
+    {
+      "id": "generator_11",
+      "type": "generator",
+      "voltage": 13200,
+      "position": {
+        "x": 334,
+        "y": 2074,
+        "width": 100,
+        "height": 100
+      },
+      "connection_points": {
+        "left": {
+          "x": 334,
+          "y": 2124
+        },
+        "right": {
+          "x": 434,
+          "y": 2124
+        }
+      },
+      "connections": {
+        "left_connected_to": [],
+        "right_connected_to": [
+          "breaker_12"
+        ]
+      }
+    },
+    {
+      "id": "breaker_12",
+      "type": "breaker",
+      "voltage": 22000,
+      "position": {
+        "x": 1801,
+        "y": 2074,
+        "width": 100,
+        "height": 100
+      },
+      "connection_points": {
+        "left": {
+          "x": 1801,
+          "y": 2124
+        },
+        "right": {
+          "x": 1901,
+          "y": 2124
+        }
+      },
+      "connections": {
+        "left_connected_to": [
+          "generator_11"
+        ],
+        "right_connected_to": [
+          "switch_13"
+        ]
+      }
+    },
+    {
+      "id": "switch_13",
+      "type": "switch",
+      "voltage": 66000,
+      "position": {
+        "x": 3268,
+        "y": 2074,
+        "width": 100,
+        "height": 100
+      },
+      "connection_points": {
+        "left": {
+          "x": 3268,
+          "y": 2124
+        },
+        "right": {
+          "x": 3368,
+          "y": 2124
+        }
+      },
+      "connections": {
+        "left_connected_to": [
+          "breaker_12"
+        ],
+        "right_connected_to": [
+          "generator_14"
+        ]
+      }
+    },
+    {
+      "id": "generator_14",
+      "type": "generator",
+      "voltage": 13200,
+      "position": {
+        "x": 4735,
+        "y": 2074,
+        "width": 100,
+        "height": 100
+      },
+      "connection_points": {
+        "left": {
+          "x": 4735,
+          "y": 2124
+        },
+        "right": {
+          "x": 4835,
+          "y": 2124
+        }
+      },
+      "connections": {
+        "left_connected_to": [
+          "switch_13"
+        ],
+        "right_connected_to": [
+          "breaker_15"
+        ]
+      }
+    },
+    {
+      "id": "breaker_15",
+      "type": "breaker",
+      "voltage": 6600,
+      "position": {
+        "x": 6202,
+        "y": 2074,
+        "width": 100,
+        "height": 100
+      },
+      "connection_points": {
+        "left": {
+          "x": 6202,
+          "y": 2124
+        },
+        "right": {
+          "x": 6302,
+          "y": 2124
+        }
+      },
+      "connections": {
+        "left_connected_to": [
+          "generator_14"
+        ],
+        "right_connected_to": [
+          "capacitor_16"
+        ]
+      }
+    },
+    {
+      "id": "capacitor_16",
+      "type": "capacitor",
+      "voltage": 6600,
+      "position": {
+        "x": 7574,
+        "y": 2054,
+        "width": 100,
+        "height": 100
+      },
+      "connection_points": {
+        "left": {
+          "x": 7574,
+          "y": 2104
+        },
+        "right": {
+          "x": 7674,
+          "y": 2104
+        }
+      },
+      "connections": {
+        "left_connected_to": [
+          "breaker_15"
+        ],
+        "right_connected_to": [
+          "switch_17"
+        ]
+      }
+    },
+    {
+      "id": "switch_17",
+      "type": "switch",
+      "voltage": 22000,
+      "position": {
+        "x": 9136,
+        "y": 2074,
+        "width": 100,
+        "height": 100
+      },
+      "connection_points": {
+        "left": {
+          "x": 9136,
+          "y": 2124
+        },
+        "right": {
+          "x": 9236,
+          "y": 2124
+        }
+      },
+      "connections": {
+        "left_connected_to": [
+          "capacitor_16"
+        ],
+        "right_connected_to": [
+          "breaker_18"
+        ]
+      }
+    },
+    {
+      "id": "breaker_18",
+      "type": "breaker",
+      "voltage": 22000,
+      "position": {
+        "x": 10603,
+        "y": 2054,
+        "width": 100,
+        "height": 100
+      },
+      "connection_points": {
+        "left": {
+          "x": 10603,
+          "y": 2104
+        },
+        "right": {
+          "x": 10703,
+          "y": 2104
+        }
+      },
+      "connections": {
+        "left_connected_to": [
+          "switch_17"
+        ],
+        "right_connected_to": [
+          "switch_19"
+        ]
+      }
+    },
+    {
+      "id": "switch_19",
+      "type": "switch",
+      "voltage": 66000,
+      "position": {
+        "x": 12070,
+        "y": 2102,
+        "width": 100,
+        "height": 100
+      },
+      "connection_points": {
+        "left": {
+          "x": 12070,
+          "y": 2152
+        },
+        "right": {
+          "x": 12170,
+          "y": 2152
+        }
+      },
+      "connections": {
+        "left_connected_to": [
+          "breaker_18"
+        ],
+        "right_connected_to": [
+          "transformer_20"
+        ]
+      }
+    },
+    {
+      "id": "transformer_20",
+      "type": "transformer",
+      "voltage": 22000,
+      "position": {
+        "x": 13411,
+        "y": 2074,
+        "width": 100,
+        "height": 100
+      },
+      "connection_points": {
+        "left": {
+          "x": 13411,
+          "y": 2124
+        },
+        "right": {
+          "x": 13511,
+          "y": 2124
+        }
+      },
+      "connections": {
+        "left_connected_to": [
+          "switch_19"
+        ],
+        "right_connected_to": []
+      }
+    },
+    {
+      "id": "transformer_21",
+      "type": "transformer",
+      "voltage": 2300,
+      "position": {
+        "x": 334,
+        "y": 3765,
+        "width": 100,
+        "height": 100
+      },
+      "connection_points": {
+        "left": {
+          "x": 334,
+          "y": 3815
+        },
+        "right": {
+          "x": 434,
+          "y": 3815
+        }
+      },
+      "connections": {
+        "left_connected_to": [],
+        "right_connected_to": [
+          "load_22"
+        ]
+      }
+    },
+    {
+      "id": "load_22",
+      "type": "load",
+      "voltage": 400,
+      "position": {
+        "x": 1801,
+        "y": 3765,
+        "width": 100,
+        "height": 100
+      },
+      "connection_points": {
+        "left": {
+          "x": 1801,
+          "y": 3815
+        },
+        "right": {
+          "x": 1901,
+          "y": 3815
+        }
+      },
+      "connections": {
+        "left_connected_to": [
+          "transformer_21"
+        ],
+        "right_connected_to": [
+          "transformer_23"
+        ]
+      }
+    },
+    {
+      "id": "transformer_23",
+      "type": "transformer",
+      "voltage": 6600,
+      "position": {
+        "x": 3266,
+        "y": 3765,
+        "width": 100,
+        "height": 100
+      },
+      "connection_points": {
+        "left": {
+          "x": 3266,
+          "y": 3815
+        },
+        "right": {
+          "x": 3366,
+          "y": 3815
+        }
+      },
+      "connections": {
+        "left_connected_to": [
+          "load_22"
+        ],
+        "right_connected_to": [
+          "load_24"
+        ]
+      }
+    },
+    {
+      "id": "load_24",
+      "type": "load",
+      "voltage": 480,
+      "position": {
+        "x": 4735,
+        "y": 3765,
+        "width": 100,
+        "height": 100
+      },
+      "connection_points": {
+        "left": {
+          "x": 4735,
+          "y": 3815
+        },
+        "right": {
+          "x": 4835,
+          "y": 3815
+        }
+      },
+      "connections": {
+        "left_connected_to": [
+          "transformer_23"
+        ],
+        "right_connected_to": [
+          "capacitor_25"
+        ]
+      }
+    },
+    {
+      "id": "capacitor_25",
+      "type": "capacitor",
+      "voltage": 1100,
+      "position": {
+        "x": 6202,
+        "y": 3765,
+        "width": 100,
+        "height": 100
+      },
+      "connection_points": {
+        "left": {
+          "x": 6202,
+          "y": 3815
+        },
+        "right": {
+          "x": 6302,
+          "y": 3815
+        }
+      },
+      "connections": {
+        "left_connected_to": [
+          "load_24"
+        ],
+        "right_connected_to": [
+          "bus_26"
+        ]
+      }
+    },
+    {
+      "id": "bus_26",
+      "type": "bus",
+      "voltage": 11000,
+      "position": {
+        "x": 7669,
+        "y": 3761,
+        "width": 100,
+        "height": 100
+      },
+      "connection_points": {
+        "left": {
+          "x": 7669,
+          "y": 3811
+        },
+        "right": {
+          "x": 7769,
+          "y": 3811
+        }
+      },
+      "connections": {
+        "left_connected_to": [
+          "capacitor_25"
+        ],
+        "right_connected_to": [
+          "load_27"
+        ]
+      }
+    },
+    {
+      "id": "load_27",
+      "type": "load",
+      "voltage": 230,
+      "position": {
+        "x": 9112,
+        "y": 3765,
+        "width": 100,
+        "height": 100
+      },
+      "connection_points": {
+        "left": {
+          "x": 9112,
+          "y": 3815
+        },
+        "right": {
+          "x": 9212,
+          "y": 3815
+        }
+      },
+      "connections": {
+        "left_connected_to": [
+          "bus_26"
+        ],
+        "right_connected_to": [
+          "generator_28"
+        ]
+      }
+    },
+    {
+      "id": "generator_28",
+      "type": "generator",
+      "voltage": 66000,
+      "position": {
+        "x": 10715,
+        "y": 3811,
+        "width": 100,
+        "height": 100
+      },
+      "connection_points": {
+        "left": {
+          "x": 10715,
+          "y": 3861
+        },
+        "right": {
+          "x": 10815,
+          "y": 3861
+        }
+      },
+      "connections": {
+        "left_connected_to": [
+          "load_27"
+        ],
+        "right_connected_to": [
+          "load_29"
+        ]
+      }
+    },
+    {
+      "id": "load_29",
+      "type": "load",
+      "voltage": 480,
+      "position": {
+        "x": 11918,
+        "y": 3825,
+        "width": 100,
+        "height": 100
+      },
+      "connection_points": {
+        "left": {
+          "x": 11918,
+          "y": 3875
+        },
+        "right": {
+          "x": 12018,
+          "y": 3875
+        }
+      },
+      "connections": {
+        "left_connected_to": [
+          "generator_28"
+        ],
+        "right_connected_to": [
+          "load_30"
+        ]
+      }
+    },
+    {
+      "id": "load_30",
+      "type": "load",
+      "voltage": 230,
+      "position": {
+        "x": 13519,
+        "y": 3781,
+        "width": 100,
+        "height": 100
+      },
+      "connection_points": {
+        "left": {
+          "x": 13519,
+          "y": 3831
+        },
+        "right": {
+          "x": 13619,
+          "y": 3831
+        }
+      },
+      "connections": {
+        "left_connected_to": [
+          "load_29"
+        ],
+        "right_connected_to": []
+      }
+    },
+    {
+      "id": "bus_31",
+      "type": "bus",
+      "voltage": 6600,
+      "position": {
+        "x": 334,
+        "y": 5450,
+        "width": 100,
+        "height": 100
+      },
+      "connection_points": {
+        "left": {
+          "x": 334,
+          "y": 5500
+        },
+        "right": {
+          "x": 434,
+          "y": 5500
+        }
+      },
+      "connections": {
+        "left_connected_to": [],
+        "right_connected_to": [
+          "breaker_32"
+        ]
+      }
+    },
+    {
+      "id": "breaker_32",
+      "type": "breaker",
+      "voltage": 33000,
+      "position": {
+        "x": 1801,
+        "y": 5456,
+        "width": 100,
+        "height": 100
+      },
+      "connection_points": {
+        "left": {
+          "x": 1801,
+          "y": 5506
+        },
+        "right": {
+          "x": 1901,
+          "y": 5506
+        }
+      },
+      "connections": {
+        "left_connected_to": [
+          "bus_31"
+        ],
+        "right_connected_to": [
+          "bus_33"
+        ]
+      }
+    },
+    {
+      "id": "bus_33",
+      "type": "bus",
+      "voltage": 66000,
+      "position": {
+        "x": 3268,
+        "y": 5456,
+        "width": 100,
+        "height": 100
+      },
+      "connection_points": {
+        "left": {
+          "x": 3268,
+          "y": 5506
+        },
+        "right": {
+          "x": 3368,
+          "y": 5506
+        }
+      },
+      "connections": {
+        "left_connected_to": [
+          "breaker_32"
+        ],
+        "right_connected_to": [
+          "switch_34"
+        ]
+      }
+    },
+    {
+      "id": "switch_34",
+      "type": "switch",
+      "voltage": 33000,
+      "position": {
+        "x": 4735,
+        "y": 5456,
+        "width": 100,
+        "height": 100
+      },
+      "connection_points": {
+        "left": {
+          "x": 4735,
+          "y": 5506
+        },
+        "right": {
+          "x": 4835,
+          "y": 5506
+        }
+      },
+      "connections": {
+        "left_connected_to": [
+          "bus_33"
+        ],
+        "right_connected_to": [
+          "switch_35"
+        ]
+      }
+    },
+    {
+      "id": "switch_35",
+      "type": "switch",
+      "voltage": 22000,
+      "position": {
+        "x": 6202,
+        "y": 5456,
+        "width": 100,
+        "height": 100
+      },
+      "connection_points": {
+        "left": {
+          "x": 6202,
+          "y": 5506
+        },
+        "right": {
+          "x": 6302,
+          "y": 5506
+        }
+      },
+      "connections": {
+        "left_connected_to": [
+          "switch_34"
+        ],
+        "right_connected_to": [
+          "generator_36"
+        ]
+      }
+    },
+    {
+      "id": "generator_36",
+      "type": "generator",
+      "voltage": 22000,
+      "position": {
+        "x": 7669,
+        "y": 5456,
+        "width": 100,
+        "height": 100
+      },
+      "connection_points": {
+        "left": {
+          "x": 7669,
+          "y": 5506
+        },
+        "right": {
+          "x": 7769,
+          "y": 5506
+        }
+      },
+      "connections": {
+        "left_connected_to": [
+          "switch_35"
+        ],
+        "right_connected_to": [
+          "load_37"
+        ]
+      }
+    },
+    {
+      "id": "load_37",
+      "type": "load",
+      "voltage": 230,
+      "position": {
+        "x": 9136,
+        "y": 5456,
+        "width": 100,
+        "height": 100
+      },
+      "connection_points": {
+        "left": {
+          "x": 9136,
+          "y": 5506
+        },
+        "right": {
+          "x": 9236,
+          "y": 5506
+        }
+      },
+      "connections": {
+        "left_connected_to": [
+          "generator_36"
+        ],
+        "right_connected_to": [
+          "breaker_38"
+        ]
+      }
+    },
+    {
+      "id": "breaker_38",
+      "type": "breaker",
+      "voltage": 66000,
+      "position": {
+        "x": 10603,
+        "y": 5405,
+        "width": 100,
+        "height": 100
+      },
+      "connection_points": {
+        "left": {
+          "x": 10603,
+          "y": 5455
+        },
+        "right": {
+          "x": 10703,
+          "y": 5455
+        }
+      },
+      "connections": {
+        "left_connected_to": [
+          "load_37"
+        ],
+        "right_connected_to": [
+          "breaker_39"
+        ]
+      }
+    },
+    {
+      "id": "breaker_39",
+      "type": "breaker",
+      "voltage": 66000,
+      "position": {
+        "x": 12070,
+        "y": 5456,
+        "width": 100,
+        "height": 100
+      },
+      "connection_points": {
+        "left": {
+          "x": 12070,
+          "y": 5506
+        },
+        "right": {
+          "x": 12170,
+          "y": 5506
+        }
+      },
+      "connections": {
+        "left_connected_to": [
+          "breaker_38"
+        ],
+        "right_connected_to": [
+          "switch_40"
+        ]
+      }
+    },
+    {
+      "id": "switch_40",
+      "type": "switch",
+      "voltage": 66000,
+      "position": {
+        "x": 13537,
+        "y": 5468,
+        "width": 100,
+        "height": 100
+      },
+      "connection_points": {
+        "left": {
+          "x": 13537,
+          "y": 5518
+        },
+        "right": {
+          "x": 13637,
+          "y": 5518
+        }
+      },
+      "connections": {
+        "left_connected_to": [
+          "breaker_39"
+        ],
+        "right_connected_to": []
+      }
+    },
+    {
+      "id": "capacitor_41",
+      "type": "capacitor",
+      "voltage": 6600,
+      "position": {
+        "x": 334,
+        "y": 7147,
+        "width": 100,
+        "height": 100
+      },
+      "connection_points": {
+        "left": {
+          "x": 334,
+          "y": 7197
+        },
+        "right": {
+          "x": 434,
+          "y": 7197
+        }
+      },
+      "connections": {
+        "left_connected_to": [],
+        "right_connected_to": [
+          "bus_42"
+        ]
+      }
+    },
+    {
+      "id": "bus_42",
+      "type": "bus",
+      "voltage": 22000,
+      "position": {
+        "x": 1824,
+        "y": 7147,
+        "width": 100,
+        "height": 100
+      },
+      "connection_points": {
+        "left": {
+          "x": 1824,
+          "y": 7197
+        },
+        "right": {
+          "x": 1924,
+          "y": 7197
+        }
+      },
+      "connections": {
+        "left_connected_to": [
+          "capacitor_41"
+        ],
+        "right_connected_to": [
+          "switch_43"
+        ]
+      }
+    },
+    {
+      "id": "switch_43",
+      "type": "switch",
+      "voltage": 66000,
+      "position": {
+        "x": 3268,
+        "y": 7147,
+        "width": 100,
+        "height": 100
+      },
+      "connection_points": {
+        "left": {
+          "x": 3268,
+          "y": 7197
+        },
+        "right": {
+          "x": 3368,
+          "y": 7197
+        }
+      },
+      "connections": {
+        "left_connected_to": [
+          "bus_42"
+        ],
+        "right_connected_to": [
+          "switch_44"
+        ]
+      }
+    },
+    {
+      "id": "switch_44",
+      "type": "switch",
+      "voltage": 22000,
+      "position": {
+        "x": 4735,
+        "y": 7147,
+        "width": 100,
+        "height": 100
+      },
+      "connection_points": {
+        "left": {
+          "x": 4735,
+          "y": 7197
+        },
+        "right": {
+          "x": 4835,
+          "y": 7197
+        }
+      },
+      "connections": {
+        "left_connected_to": [
+          "switch_43"
+        ],
+        "right_connected_to": [
+          "generator_45"
+        ]
+      }
+    },
+    {
+      "id": "generator_45",
+      "type": "generator",
+      "voltage": 33000,
+      "position": {
+        "x": 6258,
+        "y": 7147,
+        "width": 100,
+        "height": 100
+      },
+      "connection_points": {
+        "left": {
+          "x": 6258,
+          "y": 7197
+        },
+        "right": {
+          "x": 6358,
+          "y": 7197
+        }
+      },
+      "connections": {
+        "left_connected_to": [
+          "switch_44"
+        ],
+        "right_connected_to": []
+      }
+    },
+    {
+      "id": "bus_46",
+      "type": "bus",
+      "voltage": 3300,
+      "position": {
+        "x": 6170,
+        "y": 7122,
+        "width": 50,
+        "height": 50
+      },
+      "connection_points": {
+        "left": {
+          "x": 6170,
+          "y": 7147
+        },
+        "right": {
+          "x": 6220,
+          "y": 7147
+        }
+      },
+      "connections": {
+        "left_connected_to": [],
+        "right_connected_to": []
+      }
+    },
+    {
+      "id": "bus_47",
+      "type": "bus",
+      "voltage": 22000,
+      "position": {
+        "x": 8235,
+        "y": 7122,
+        "width": 50,
+        "height": 50
+      },
+      "connection_points": {
+        "left": {
+          "x": 8235,
+          "y": 7147
+        },
+        "right": {
+          "x": 8285,
+          "y": 7147
+        }
+      },
+      "connections": {
+        "left_connected_to": [],
+        "right_connected_to": []
+      }
+    },
+    {
+      "id": "bus_48",
+      "type": "bus",
+      "voltage": 22000,
+      "position": {
+        "x": 10300,
+        "y": 7122,
+        "width": 50,
+        "height": 50
+      },
+      "connection_points": {
+        "left": {
+          "x": 10300,
+          "y": 7147
+        },
+        "right": {
+          "x": 10350,
+          "y": 7147
+        }
+      },
+      "connections": {
+        "left_connected_to": [],
+        "right_connected_to": []
+      }
+    }
+  ],
+  "connections": [
+    {
+      "from_point": {
+        "x": 434,
+        "y": 433
+      },
+      "to_point": {
+        "x": 1801,
+        "y": 433
+      },
+      "from_component": "generator_1",
+      "to_component": "switch_2",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 1901,
+        "y": 433
+      },
+      "to_point": {
+        "x": 3268,
+        "y": 433
+      },
+      "from_component": "switch_2",
+      "to_component": "transformer_3",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 3368,
+        "y": 433
+      },
+      "to_point": {
+        "x": 4735,
+        "y": 433
+      },
+      "from_component": "transformer_3",
+      "to_component": "transformer_4",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 4835,
+        "y": 433
+      },
+      "to_point": {
+        "x": 6202,
+        "y": 433
+      },
+      "from_component": "transformer_4",
+      "to_component": "generator_5",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 6302,
+        "y": 433
+      },
+      "to_point": {
+        "x": 7669,
+        "y": 433
+      },
+      "from_component": "generator_5",
+      "to_component": "generator_6",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 7769,
+        "y": 433
+      },
+      "to_point": {
+        "x": 9136,
+        "y": 433
+      },
+      "from_component": "generator_6",
+      "to_component": "breaker_7",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 9236,
+        "y": 433
+      },
+      "to_point": {
+        "x": 10729,
+        "y": 433
+      },
+      "from_component": "breaker_7",
+      "to_component": "load_8",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 10829,
+        "y": 433
+      },
+      "to_point": {
+        "x": 12070,
+        "y": 433
+      },
+      "from_component": "load_8",
+      "to_component": "bus_9",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 12170,
+        "y": 433
+      },
+      "to_point": {
+        "x": 13672,
+        "y": 433
+      },
+      "from_component": "bus_9",
+      "to_component": "breaker_10",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 434,
+        "y": 2124
+      },
+      "to_point": {
+        "x": 1801,
+        "y": 2124
+      },
+      "from_component": "generator_11",
+      "to_component": "breaker_12",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 1901,
+        "y": 2124
+      },
+      "to_point": {
+        "x": 3268,
+        "y": 2124
+      },
+      "from_component": "breaker_12",
+      "to_component": "switch_13",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 3368,
+        "y": 2124
+      },
+      "to_point": {
+        "x": 4735,
+        "y": 2124
+      },
+      "from_component": "switch_13",
+      "to_component": "generator_14",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 4835,
+        "y": 2124
+      },
+      "to_point": {
+        "x": 6202,
+        "y": 2124
+      },
+      "from_component": "generator_14",
+      "to_component": "breaker_15",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 6302,
+        "y": 2124
+      },
+      "to_point": {
+        "x": 7574,
+        "y": 2104
+      },
+      "from_component": "breaker_15",
+      "to_component": "capacitor_16",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 7674,
+        "y": 2104
+      },
+      "to_point": {
+        "x": 9136,
+        "y": 2124
+      },
+      "from_component": "capacitor_16",
+      "to_component": "switch_17",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 9236,
+        "y": 2124
+      },
+      "to_point": {
+        "x": 10603,
+        "y": 2104
+      },
+      "from_component": "switch_17",
+      "to_component": "breaker_18",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 10703,
+        "y": 2104
+      },
+      "to_point": {
+        "x": 12070,
+        "y": 2152
+      },
+      "from_component": "breaker_18",
+      "to_component": "switch_19",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 12170,
+        "y": 2152
+      },
+      "to_point": {
+        "x": 13411,
+        "y": 2124
+      },
+      "from_component": "switch_19",
+      "to_component": "transformer_20",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 434,
+        "y": 3815
+      },
+      "to_point": {
+        "x": 1801,
+        "y": 3815
+      },
+      "from_component": "transformer_21",
+      "to_component": "load_22",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 1901,
+        "y": 3815
+      },
+      "to_point": {
+        "x": 3266,
+        "y": 3815
+      },
+      "from_component": "load_22",
+      "to_component": "transformer_23",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 3366,
+        "y": 3815
+      },
+      "to_point": {
+        "x": 4735,
+        "y": 3815
+      },
+      "from_component": "transformer_23",
+      "to_component": "load_24",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 4835,
+        "y": 3815
+      },
+      "to_point": {
+        "x": 6202,
+        "y": 3815
+      },
+      "from_component": "load_24",
+      "to_component": "capacitor_25",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 6302,
+        "y": 3815
+      },
+      "to_point": {
+        "x": 7669,
+        "y": 3811
+      },
+      "from_component": "capacitor_25",
+      "to_component": "bus_26",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 7769,
+        "y": 3811
+      },
+      "to_point": {
+        "x": 9112,
+        "y": 3815
+      },
+      "from_component": "bus_26",
+      "to_component": "load_27",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 9212,
+        "y": 3815
+      },
+      "to_point": {
+        "x": 10715,
+        "y": 3861
+      },
+      "from_component": "load_27",
+      "to_component": "generator_28",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 10815,
+        "y": 3861
+      },
+      "to_point": {
+        "x": 11918,
+        "y": 3875
+      },
+      "from_component": "generator_28",
+      "to_component": "load_29",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 12018,
+        "y": 3875
+      },
+      "to_point": {
+        "x": 13519,
+        "y": 3831
+      },
+      "from_component": "load_29",
+      "to_component": "load_30",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 434,
+        "y": 5500
+      },
+      "to_point": {
+        "x": 1801,
+        "y": 5506
+      },
+      "from_component": "bus_31",
+      "to_component": "breaker_32",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 1901,
+        "y": 5506
+      },
+      "to_point": {
+        "x": 3268,
+        "y": 5506
+      },
+      "from_component": "breaker_32",
+      "to_component": "bus_33",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 3368,
+        "y": 5506
+      },
+      "to_point": {
+        "x": 4735,
+        "y": 5506
+      },
+      "from_component": "bus_33",
+      "to_component": "switch_34",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 4835,
+        "y": 5506
+      },
+      "to_point": {
+        "x": 6202,
+        "y": 5506
+      },
+      "from_component": "switch_34",
+      "to_component": "switch_35",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 6302,
+        "y": 5506
+      },
+      "to_point": {
+        "x": 7669,
+        "y": 5506
+      },
+      "from_component": "switch_35",
+      "to_component": "generator_36",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 7769,
+        "y": 5506
+      },
+      "to_point": {
+        "x": 9136,
+        "y": 5506
+      },
+      "from_component": "generator_36",
+      "to_component": "load_37",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 9236,
+        "y": 5506
+      },
+      "to_point": {
+        "x": 10603,
+        "y": 5455
+      },
+      "from_component": "load_37",
+      "to_component": "breaker_38",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 10703,
+        "y": 5455
+      },
+      "to_point": {
+        "x": 12070,
+        "y": 5506
+      },
+      "from_component": "breaker_38",
+      "to_component": "breaker_39",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 12170,
+        "y": 5506
+      },
+      "to_point": {
+        "x": 13537,
+        "y": 5518
+      },
+      "from_component": "breaker_39",
+      "to_component": "switch_40",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 434,
+        "y": 7197
+      },
+      "to_point": {
+        "x": 1824,
+        "y": 7197
+      },
+      "from_component": "capacitor_41",
+      "to_component": "bus_42",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 1924,
+        "y": 7197
+      },
+      "to_point": {
+        "x": 3268,
+        "y": 7197
+      },
+      "from_component": "bus_42",
+      "to_component": "switch_43",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 3368,
+        "y": 7197
+      },
+      "to_point": {
+        "x": 4735,
+        "y": 7197
+      },
+      "from_component": "switch_43",
+      "to_component": "switch_44",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 4835,
+        "y": 7197
+      },
+      "to_point": {
+        "x": 6258,
+        "y": 7197
+      },
+      "from_component": "switch_44",
+      "to_component": "generator_45",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 434,
+        "y": 433
+      },
+      "to_point": {
+        "x": 384,
+        "y": 433
+      },
+      "from_component": "generator_1",
+      "to_component": "generator_1",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 384,
+        "y": 433
+      },
+      "to_point": {
+        "x": 384,
+        "y": 2124
+      },
+      "from_component": "generator_1",
+      "to_component": "generator_11",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 384,
+        "y": 2124
+      },
+      "to_point": {
+        "x": 334,
+        "y": 2124
+      },
+      "from_component": "generator_11",
+      "to_component": "generator_11",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 1901,
+        "y": 433
+      },
+      "to_point": {
+        "x": 1851,
+        "y": 433
+      },
+      "from_component": "switch_2",
+      "to_component": "switch_2",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 1851,
+        "y": 433
+      },
+      "to_point": {
+        "x": 1851,
+        "y": 2124
+      },
+      "from_component": "switch_2",
+      "to_component": "breaker_12",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 1851,
+        "y": 2124
+      },
+      "to_point": {
+        "x": 1801,
+        "y": 2124
+      },
+      "from_component": "breaker_12",
+      "to_component": "breaker_12",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 3368,
+        "y": 433
+      },
+      "to_point": {
+        "x": 3318,
+        "y": 433
+      },
+      "from_component": "transformer_3",
+      "to_component": "transformer_3",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 3318,
+        "y": 433
+      },
+      "to_point": {
+        "x": 3318,
+        "y": 2124
+      },
+      "from_component": "transformer_3",
+      "to_component": "switch_13",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 3318,
+        "y": 2124
+      },
+      "to_point": {
+        "x": 3268,
+        "y": 2124
+      },
+      "from_component": "switch_13",
+      "to_component": "switch_13",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 4835,
+        "y": 433
+      },
+      "to_point": {
+        "x": 4785,
+        "y": 433
+      },
+      "from_component": "transformer_4",
+      "to_component": "transformer_4",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 4785,
+        "y": 433
+      },
+      "to_point": {
+        "x": 4785,
+        "y": 2124
+      },
+      "from_component": "transformer_4",
+      "to_component": "generator_14",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 4785,
+        "y": 2124
+      },
+      "to_point": {
+        "x": 4735,
+        "y": 2124
+      },
+      "from_component": "generator_14",
+      "to_component": "generator_14",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 6302,
+        "y": 433
+      },
+      "to_point": {
+        "x": 6252,
+        "y": 433
+      },
+      "from_component": "generator_5",
+      "to_component": "generator_5",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 6252,
+        "y": 433
+      },
+      "to_point": {
+        "x": 6252,
+        "y": 2124
+      },
+      "from_component": "generator_5",
+      "to_component": "breaker_15",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 6252,
+        "y": 2124
+      },
+      "to_point": {
+        "x": 6202,
+        "y": 2124
+      },
+      "from_component": "breaker_15",
+      "to_component": "breaker_15",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 7769,
+        "y": 433
+      },
+      "to_point": {
+        "x": 7671,
+        "y": 433
+      },
+      "from_component": "generator_6",
+      "to_component": "generator_6",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 7671,
+        "y": 433
+      },
+      "to_point": {
+        "x": 7671,
+        "y": 2104
+      },
+      "from_component": "generator_6",
+      "to_component": "capacitor_16",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 7671,
+        "y": 2104
+      },
+      "to_point": {
+        "x": 7574,
+        "y": 2104
+      },
+      "from_component": "capacitor_16",
+      "to_component": "capacitor_16",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 9236,
+        "y": 433
+      },
+      "to_point": {
+        "x": 9186,
+        "y": 433
+      },
+      "from_component": "breaker_7",
+      "to_component": "breaker_7",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 9186,
+        "y": 433
+      },
+      "to_point": {
+        "x": 9186,
+        "y": 2124
+      },
+      "from_component": "breaker_7",
+      "to_component": "switch_17",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 9186,
+        "y": 2124
+      },
+      "to_point": {
+        "x": 9136,
+        "y": 2124
+      },
+      "from_component": "switch_17",
+      "to_component": "switch_17",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 10829,
+        "y": 433
+      },
+      "to_point": {
+        "x": 10716,
+        "y": 433
+      },
+      "from_component": "load_8",
+      "to_component": "load_8",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 10716,
+        "y": 433
+      },
+      "to_point": {
+        "x": 10716,
+        "y": 2104
+      },
+      "from_component": "load_8",
+      "to_component": "breaker_18",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 10716,
+        "y": 2104
+      },
+      "to_point": {
+        "x": 10603,
+        "y": 2104
+      },
+      "from_component": "breaker_18",
+      "to_component": "breaker_18",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 12170,
+        "y": 433
+      },
+      "to_point": {
+        "x": 12120,
+        "y": 433
+      },
+      "from_component": "bus_9",
+      "to_component": "bus_9",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 12120,
+        "y": 433
+      },
+      "to_point": {
+        "x": 12120,
+        "y": 2152
+      },
+      "from_component": "bus_9",
+      "to_component": "switch_19",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 12120,
+        "y": 2152
+      },
+      "to_point": {
+        "x": 12070,
+        "y": 2152
+      },
+      "from_component": "switch_19",
+      "to_component": "switch_19",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 13772,
+        "y": 433
+      },
+      "to_point": {
+        "x": 13591,
+        "y": 433
+      },
+      "from_component": "breaker_10",
+      "to_component": "breaker_10",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 13591,
+        "y": 433
+      },
+      "to_point": {
+        "x": 13591,
+        "y": 2124
+      },
+      "from_component": "breaker_10",
+      "to_component": "transformer_20",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 13591,
+        "y": 2124
+      },
+      "to_point": {
+        "x": 13411,
+        "y": 2124
+      },
+      "from_component": "transformer_20",
+      "to_component": "transformer_20",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 434,
+        "y": 2124
+      },
+      "to_point": {
+        "x": 384,
+        "y": 2124
+      },
+      "from_component": "generator_11",
+      "to_component": "generator_11",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 384,
+        "y": 2124
+      },
+      "to_point": {
+        "x": 384,
+        "y": 3815
+      },
+      "from_component": "generator_11",
+      "to_component": "transformer_21",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 384,
+        "y": 3815
+      },
+      "to_point": {
+        "x": 334,
+        "y": 3815
+      },
+      "from_component": "transformer_21",
+      "to_component": "transformer_21",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 1901,
+        "y": 2124
+      },
+      "to_point": {
+        "x": 1851,
+        "y": 2124
+      },
+      "from_component": "breaker_12",
+      "to_component": "breaker_12",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 1851,
+        "y": 2124
+      },
+      "to_point": {
+        "x": 1851,
+        "y": 3815
+      },
+      "from_component": "breaker_12",
+      "to_component": "load_22",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 1851,
+        "y": 3815
+      },
+      "to_point": {
+        "x": 1801,
+        "y": 3815
+      },
+      "from_component": "load_22",
+      "to_component": "load_22",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 3368,
+        "y": 2124
+      },
+      "to_point": {
+        "x": 3317,
+        "y": 2124
+      },
+      "from_component": "switch_13",
+      "to_component": "switch_13",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 3317,
+        "y": 2124
+      },
+      "to_point": {
+        "x": 3317,
+        "y": 3815
+      },
+      "from_component": "switch_13",
+      "to_component": "transformer_23",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 3317,
+        "y": 3815
+      },
+      "to_point": {
+        "x": 3266,
+        "y": 3815
+      },
+      "from_component": "transformer_23",
+      "to_component": "transformer_23",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 4835,
+        "y": 2124
+      },
+      "to_point": {
+        "x": 4785,
+        "y": 2124
+      },
+      "from_component": "generator_14",
+      "to_component": "generator_14",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 4785,
+        "y": 2124
+      },
+      "to_point": {
+        "x": 4785,
+        "y": 3815
+      },
+      "from_component": "generator_14",
+      "to_component": "load_24",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 4785,
+        "y": 3815
+      },
+      "to_point": {
+        "x": 4735,
+        "y": 3815
+      },
+      "from_component": "load_24",
+      "to_component": "load_24",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 6302,
+        "y": 2124
+      },
+      "to_point": {
+        "x": 6252,
+        "y": 2124
+      },
+      "from_component": "breaker_15",
+      "to_component": "breaker_15",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 6252,
+        "y": 2124
+      },
+      "to_point": {
+        "x": 6252,
+        "y": 3815
+      },
+      "from_component": "breaker_15",
+      "to_component": "capacitor_25",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 6252,
+        "y": 3815
+      },
+      "to_point": {
+        "x": 6202,
+        "y": 3815
+      },
+      "from_component": "capacitor_25",
+      "to_component": "capacitor_25",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 7674,
+        "y": 2104
+      },
+      "to_point": {
+        "x": 7671,
+        "y": 2104
+      },
+      "from_component": "capacitor_16",
+      "to_component": "capacitor_16",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 7671,
+        "y": 2104
+      },
+      "to_point": {
+        "x": 7671,
+        "y": 3811
+      },
+      "from_component": "capacitor_16",
+      "to_component": "bus_26",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 7671,
+        "y": 3811
+      },
+      "to_point": {
+        "x": 7669,
+        "y": 3811
+      },
+      "from_component": "bus_26",
+      "to_component": "bus_26",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 9236,
+        "y": 2124
+      },
+      "to_point": {
+        "x": 9174,
+        "y": 2124
+      },
+      "from_component": "switch_17",
+      "to_component": "switch_17",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 9174,
+        "y": 2124
+      },
+      "to_point": {
+        "x": 9174,
+        "y": 3815
+      },
+      "from_component": "switch_17",
+      "to_component": "load_27",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 9174,
+        "y": 3815
+      },
+      "to_point": {
+        "x": 9112,
+        "y": 3815
+      },
+      "from_component": "load_27",
+      "to_component": "load_27",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 10703,
+        "y": 2104
+      },
+      "to_point": {
+        "x": 10709,
+        "y": 2104
+      },
+      "from_component": "breaker_18",
+      "to_component": "breaker_18",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 10709,
+        "y": 2104
+      },
+      "to_point": {
+        "x": 10709,
+        "y": 3861
+      },
+      "from_component": "breaker_18",
+      "to_component": "generator_28",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 10709,
+        "y": 3861
+      },
+      "to_point": {
+        "x": 10715,
+        "y": 3861
+      },
+      "from_component": "generator_28",
+      "to_component": "generator_28",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 12170,
+        "y": 2152
+      },
+      "to_point": {
+        "x": 12044,
+        "y": 2152
+      },
+      "from_component": "switch_19",
+      "to_component": "switch_19",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 12044,
+        "y": 2152
+      },
+      "to_point": {
+        "x": 12044,
+        "y": 3875
+      },
+      "from_component": "switch_19",
+      "to_component": "load_29",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 12044,
+        "y": 3875
+      },
+      "to_point": {
+        "x": 11918,
+        "y": 3875
+      },
+      "from_component": "load_29",
+      "to_component": "load_29",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 13511,
+        "y": 2124
+      },
+      "to_point": {
+        "x": 13515,
+        "y": 2124
+      },
+      "from_component": "transformer_20",
+      "to_component": "transformer_20",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 13515,
+        "y": 2124
+      },
+      "to_point": {
+        "x": 13515,
+        "y": 3831
+      },
+      "from_component": "transformer_20",
+      "to_component": "load_30",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 13515,
+        "y": 3831
+      },
+      "to_point": {
+        "x": 13519,
+        "y": 3831
+      },
+      "from_component": "load_30",
+      "to_component": "load_30",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 434,
+        "y": 3815
+      },
+      "to_point": {
+        "x": 384,
+        "y": 3815
+      },
+      "from_component": "transformer_21",
+      "to_component": "transformer_21",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 384,
+        "y": 3815
+      },
+      "to_point": {
+        "x": 384,
+        "y": 5500
+      },
+      "from_component": "transformer_21",
+      "to_component": "bus_31",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 384,
+        "y": 5500
+      },
+      "to_point": {
+        "x": 334,
+        "y": 5500
+      },
+      "from_component": "bus_31",
+      "to_component": "bus_31",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 1901,
+        "y": 3815
+      },
+      "to_point": {
+        "x": 1851,
+        "y": 3815
+      },
+      "from_component": "load_22",
+      "to_component": "load_22",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 1851,
+        "y": 3815
+      },
+      "to_point": {
+        "x": 1851,
+        "y": 5506
+      },
+      "from_component": "load_22",
+      "to_component": "breaker_32",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 1851,
+        "y": 5506
+      },
+      "to_point": {
+        "x": 1801,
+        "y": 5506
+      },
+      "from_component": "breaker_32",
+      "to_component": "breaker_32",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 3366,
+        "y": 3815
+      },
+      "to_point": {
+        "x": 3317,
+        "y": 3815
+      },
+      "from_component": "transformer_23",
+      "to_component": "transformer_23",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 3317,
+        "y": 3815
+      },
+      "to_point": {
+        "x": 3317,
+        "y": 5506
+      },
+      "from_component": "transformer_23",
+      "to_component": "bus_33",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 3317,
+        "y": 5506
+      },
+      "to_point": {
+        "x": 3268,
+        "y": 5506
+      },
+      "from_component": "bus_33",
+      "to_component": "bus_33",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 4835,
+        "y": 3815
+      },
+      "to_point": {
+        "x": 4785,
+        "y": 3815
+      },
+      "from_component": "load_24",
+      "to_component": "load_24",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 4785,
+        "y": 3815
+      },
+      "to_point": {
+        "x": 4785,
+        "y": 5506
+      },
+      "from_component": "load_24",
+      "to_component": "switch_34",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 4785,
+        "y": 5506
+      },
+      "to_point": {
+        "x": 4735,
+        "y": 5506
+      },
+      "from_component": "switch_34",
+      "to_component": "switch_34",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 6302,
+        "y": 3815
+      },
+      "to_point": {
+        "x": 6252,
+        "y": 3815
+      },
+      "from_component": "capacitor_25",
+      "to_component": "capacitor_25",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 6252,
+        "y": 3815
+      },
+      "to_point": {
+        "x": 6252,
+        "y": 5506
+      },
+      "from_component": "capacitor_25",
+      "to_component": "switch_35",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 6252,
+        "y": 5506
+      },
+      "to_point": {
+        "x": 6202,
+        "y": 5506
+      },
+      "from_component": "switch_35",
+      "to_component": "switch_35",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 7769,
+        "y": 3811
+      },
+      "to_point": {
+        "x": 7719,
+        "y": 3811
+      },
+      "from_component": "bus_26",
+      "to_component": "bus_26",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 7719,
+        "y": 3811
+      },
+      "to_point": {
+        "x": 7719,
+        "y": 5506
+      },
+      "from_component": "bus_26",
+      "to_component": "generator_36",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 7719,
+        "y": 5506
+      },
+      "to_point": {
+        "x": 7669,
+        "y": 5506
+      },
+      "from_component": "generator_36",
+      "to_component": "generator_36",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 9212,
+        "y": 3815
+      },
+      "to_point": {
+        "x": 9174,
+        "y": 3815
+      },
+      "from_component": "load_27",
+      "to_component": "load_27",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 9174,
+        "y": 3815
+      },
+      "to_point": {
+        "x": 9174,
+        "y": 5506
+      },
+      "from_component": "load_27",
+      "to_component": "load_37",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 9174,
+        "y": 5506
+      },
+      "to_point": {
+        "x": 9136,
+        "y": 5506
+      },
+      "from_component": "load_37",
+      "to_component": "load_37",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 10815,
+        "y": 3861
+      },
+      "to_point": {
+        "x": 10709,
+        "y": 3861
+      },
+      "from_component": "generator_28",
+      "to_component": "generator_28",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 10709,
+        "y": 3861
+      },
+      "to_point": {
+        "x": 10709,
+        "y": 5455
+      },
+      "from_component": "generator_28",
+      "to_component": "breaker_38",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 10709,
+        "y": 5455
+      },
+      "to_point": {
+        "x": 10603,
+        "y": 5455
+      },
+      "from_component": "breaker_38",
+      "to_component": "breaker_38",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 12018,
+        "y": 3875
+      },
+      "to_point": {
+        "x": 12044,
+        "y": 3875
+      },
+      "from_component": "load_29",
+      "to_component": "load_29",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 12044,
+        "y": 3875
+      },
+      "to_point": {
+        "x": 12044,
+        "y": 5506
+      },
+      "from_component": "load_29",
+      "to_component": "breaker_39",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 12044,
+        "y": 5506
+      },
+      "to_point": {
+        "x": 12070,
+        "y": 5506
+      },
+      "from_component": "breaker_39",
+      "to_component": "breaker_39",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 13619,
+        "y": 3831
+      },
+      "to_point": {
+        "x": 13578,
+        "y": 3831
+      },
+      "from_component": "load_30",
+      "to_component": "load_30",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 13578,
+        "y": 3831
+      },
+      "to_point": {
+        "x": 13578,
+        "y": 5518
+      },
+      "from_component": "load_30",
+      "to_component": "switch_40",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 13578,
+        "y": 5518
+      },
+      "to_point": {
+        "x": 13537,
+        "y": 5518
+      },
+      "from_component": "switch_40",
+      "to_component": "switch_40",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 434,
+        "y": 5500
+      },
+      "to_point": {
+        "x": 384,
+        "y": 5500
+      },
+      "from_component": "bus_31",
+      "to_component": "bus_31",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 384,
+        "y": 5500
+      },
+      "to_point": {
+        "x": 384,
+        "y": 7197
+      },
+      "from_component": "bus_31",
+      "to_component": "capacitor_41",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 384,
+        "y": 7197
+      },
+      "to_point": {
+        "x": 334,
+        "y": 7197
+      },
+      "from_component": "capacitor_41",
+      "to_component": "capacitor_41",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 1901,
+        "y": 5506
+      },
+      "to_point": {
+        "x": 1862,
+        "y": 5506
+      },
+      "from_component": "breaker_32",
+      "to_component": "breaker_32",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 1862,
+        "y": 5506
+      },
+      "to_point": {
+        "x": 1862,
+        "y": 7197
+      },
+      "from_component": "breaker_32",
+      "to_component": "bus_42",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 1862,
+        "y": 7197
+      },
+      "to_point": {
+        "x": 1824,
+        "y": 7197
+      },
+      "from_component": "bus_42",
+      "to_component": "bus_42",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 3368,
+        "y": 5506
+      },
+      "to_point": {
+        "x": 3318,
+        "y": 5506
+      },
+      "from_component": "bus_33",
+      "to_component": "bus_33",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 3318,
+        "y": 5506
+      },
+      "to_point": {
+        "x": 3318,
+        "y": 7197
+      },
+      "from_component": "bus_33",
+      "to_component": "switch_43",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 3318,
+        "y": 7197
+      },
+      "to_point": {
+        "x": 3268,
+        "y": 7197
+      },
+      "from_component": "switch_43",
+      "to_component": "switch_43",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 4835,
+        "y": 5506
+      },
+      "to_point": {
+        "x": 4785,
+        "y": 5506
+      },
+      "from_component": "switch_34",
+      "to_component": "switch_34",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 4785,
+        "y": 5506
+      },
+      "to_point": {
+        "x": 4785,
+        "y": 7197
+      },
+      "from_component": "switch_34",
+      "to_component": "switch_44",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 4785,
+        "y": 7197
+      },
+      "to_point": {
+        "x": 4735,
+        "y": 7197
+      },
+      "from_component": "switch_44",
+      "to_component": "switch_44",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 6302,
+        "y": 5506
+      },
+      "to_point": {
+        "x": 6280,
+        "y": 5506
+      },
+      "from_component": "switch_35",
+      "to_component": "switch_35",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 6280,
+        "y": 5506
+      },
+      "to_point": {
+        "x": 6280,
+        "y": 7197
+      },
+      "from_component": "switch_35",
+      "to_component": "generator_45",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 6280,
+        "y": 7197
+      },
+      "to_point": {
+        "x": 6258,
+        "y": 7197
+      },
+      "from_component": "generator_45",
+      "to_component": "generator_45",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 434,
+        "y": 433
+      },
+      "to_point": {
+        "x": 1129,
+        "y": 433
+      },
+      "from_component": "generator_1",
+      "to_component": "switch_2",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 1129,
+        "y": 433
+      },
+      "to_point": {
+        "x": 1129,
+        "y": 7197
+      },
+      "from_component": "switch_2",
+      "to_component": "capacitor_41",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 1129,
+        "y": 7197
+      },
+      "to_point": {
+        "x": 1824,
+        "y": 7197
+      },
+      "from_component": "capacitor_41",
+      "to_component": "bus_42",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 1901,
+        "y": 433
+      },
+      "to_point": {
+        "x": 1862,
+        "y": 433
+      },
+      "from_component": "switch_2",
+      "to_component": "switch_2",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 1862,
+        "y": 433
+      },
+      "to_point": {
+        "x": 1862,
+        "y": 7197
+      },
+      "from_component": "switch_2",
+      "to_component": "bus_42",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 1862,
+        "y": 7197
+      },
+      "to_point": {
+        "x": 1824,
+        "y": 7197
+      },
+      "from_component": "bus_42",
+      "to_component": "bus_42",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 3268,
+        "y": 433
+      },
+      "to_point": {
+        "x": 2596,
+        "y": 433
+      },
+      "from_component": "transformer_3",
+      "to_component": "transformer_3",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 2596,
+        "y": 433
+      },
+      "to_point": {
+        "x": 2596,
+        "y": 7197
+      },
+      "from_component": "transformer_3",
+      "to_component": "bus_42",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 2596,
+        "y": 7197
+      },
+      "to_point": {
+        "x": 1924,
+        "y": 7197
+      },
+      "from_component": "bus_42",
+      "to_component": "bus_42",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 4735,
+        "y": 433
+      },
+      "to_point": {
+        "x": 4785,
+        "y": 433
+      },
+      "from_component": "transformer_4",
+      "to_component": "transformer_4",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 4785,
+        "y": 433
+      },
+      "to_point": {
+        "x": 4785,
+        "y": 7197
+      },
+      "from_component": "transformer_4",
+      "to_component": "switch_44",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 4785,
+        "y": 7197
+      },
+      "to_point": {
+        "x": 4835,
+        "y": 7197
+      },
+      "from_component": "switch_44",
+      "to_component": "switch_44",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 6202,
+        "y": 433
+      },
+      "to_point": {
+        "x": 6211,
+        "y": 433
+      },
+      "from_component": "generator_5",
+      "to_component": "generator_5",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 6211,
+        "y": 433
+      },
+      "to_point": {
+        "x": 6211,
+        "y": 7147
+      },
+      "from_component": "generator_5",
+      "to_component": "bus_46",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 6211,
+        "y": 7147
+      },
+      "to_point": {
+        "x": 6220,
+        "y": 7147
+      },
+      "from_component": "bus_46",
+      "to_component": "bus_46",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 7769,
+        "y": 433
+      },
+      "to_point": {
+        "x": 8002,
+        "y": 433
+      },
+      "from_component": "generator_6",
+      "to_component": "generator_6",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 8002,
+        "y": 433
+      },
+      "to_point": {
+        "x": 8002,
+        "y": 7147
+      },
+      "from_component": "generator_6",
+      "to_component": "bus_47",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 8002,
+        "y": 7147
+      },
+      "to_point": {
+        "x": 8235,
+        "y": 7147
+      },
+      "from_component": "bus_47",
+      "to_component": "bus_47",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 9136,
+        "y": 433
+      },
+      "to_point": {
+        "x": 8710,
+        "y": 433
+      },
+      "from_component": "breaker_7",
+      "to_component": "breaker_7",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 8710,
+        "y": 433
+      },
+      "to_point": {
+        "x": 8710,
+        "y": 7147
+      },
+      "from_component": "breaker_7",
+      "to_component": "bus_47",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 8710,
+        "y": 7147
+      },
+      "to_point": {
+        "x": 8285,
+        "y": 7147
+      },
+      "from_component": "bus_47",
+      "to_component": "bus_47",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 10729,
+        "y": 433
+      },
+      "to_point": {
+        "x": 10539,
+        "y": 433
+      },
+      "from_component": "load_8",
+      "to_component": "load_8",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 10539,
+        "y": 433
+      },
+      "to_point": {
+        "x": 10539,
+        "y": 7147
+      },
+      "from_component": "load_8",
+      "to_component": "bus_48",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 10539,
+        "y": 7147
+      },
+      "to_point": {
+        "x": 10350,
+        "y": 7147
+      },
+      "from_component": "bus_48",
+      "to_component": "bus_48",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 12070,
+        "y": 433
+      },
+      "to_point": {
+        "x": 11210,
+        "y": 433
+      },
+      "from_component": "bus_9",
+      "to_component": "load_8",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 11210,
+        "y": 433
+      },
+      "to_point": {
+        "x": 11210,
+        "y": 7147
+      },
+      "from_component": "load_8",
+      "to_component": "bus_48",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 11210,
+        "y": 7147
+      },
+      "to_point": {
+        "x": 10350,
+        "y": 7147
+      },
+      "from_component": "bus_48",
+      "to_component": "bus_48",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 13672,
+        "y": 433
+      },
+      "to_point": {
+        "x": 12011,
+        "y": 433
+      },
+      "from_component": "breaker_10",
+      "to_component": "bus_9",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 12011,
+        "y": 433
+      },
+      "to_point": {
+        "x": 12011,
+        "y": 7147
+      },
+      "from_component": "bus_9",
+      "to_component": "breaker_39",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 12011,
+        "y": 7147
+      },
+      "to_point": {
+        "x": 10350,
+        "y": 7147
+      },
+      "from_component": "breaker_39",
+      "to_component": "bus_48",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 434,
+        "y": 2124
+      },
+      "to_point": {
+        "x": 1129,
+        "y": 2124
+      },
+      "from_component": "generator_11",
+      "to_component": "breaker_12",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 1129,
+        "y": 2124
+      },
+      "to_point": {
+        "x": 1129,
+        "y": 7197
+      },
+      "from_component": "breaker_12",
+      "to_component": "capacitor_41",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 1129,
+        "y": 7197
+      },
+      "to_point": {
+        "x": 1824,
+        "y": 7197
+      },
+      "from_component": "capacitor_41",
+      "to_component": "bus_42",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 1901,
+        "y": 2124
+      },
+      "to_point": {
+        "x": 1862,
+        "y": 2124
+      },
+      "from_component": "breaker_12",
+      "to_component": "breaker_12",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 1862,
+        "y": 2124
+      },
+      "to_point": {
+        "x": 1862,
+        "y": 7197
+      },
+      "from_component": "breaker_12",
+      "to_component": "bus_42",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 1862,
+        "y": 7197
+      },
+      "to_point": {
+        "x": 1824,
+        "y": 7197
+      },
+      "from_component": "bus_42",
+      "to_component": "bus_42",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 3268,
+        "y": 2124
+      },
+      "to_point": {
+        "x": 2596,
+        "y": 2124
+      },
+      "from_component": "switch_13",
+      "to_component": "switch_13",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 2596,
+        "y": 2124
+      },
+      "to_point": {
+        "x": 2596,
+        "y": 7197
+      },
+      "from_component": "switch_13",
+      "to_component": "bus_42",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 2596,
+        "y": 7197
+      },
+      "to_point": {
+        "x": 1924,
+        "y": 7197
+      },
+      "from_component": "bus_42",
+      "to_component": "bus_42",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 4735,
+        "y": 2124
+      },
+      "to_point": {
+        "x": 4785,
+        "y": 2124
+      },
+      "from_component": "generator_14",
+      "to_component": "generator_14",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 4785,
+        "y": 2124
+      },
+      "to_point": {
+        "x": 4785,
+        "y": 7197
+      },
+      "from_component": "generator_14",
+      "to_component": "switch_44",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 4785,
+        "y": 7197
+      },
+      "to_point": {
+        "x": 4835,
+        "y": 7197
+      },
+      "from_component": "switch_44",
+      "to_component": "switch_44",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 6202,
+        "y": 2124
+      },
+      "to_point": {
+        "x": 6211,
+        "y": 2124
+      },
+      "from_component": "breaker_15",
+      "to_component": "breaker_15",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 6211,
+        "y": 2124
+      },
+      "to_point": {
+        "x": 6211,
+        "y": 7147
+      },
+      "from_component": "breaker_15",
+      "to_component": "bus_46",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 6211,
+        "y": 7147
+      },
+      "to_point": {
+        "x": 6220,
+        "y": 7147
+      },
+      "from_component": "bus_46",
+      "to_component": "bus_46",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 7674,
+        "y": 2104
+      },
+      "to_point": {
+        "x": 7954,
+        "y": 2104
+      },
+      "from_component": "capacitor_16",
+      "to_component": "capacitor_16",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 7954,
+        "y": 2104
+      },
+      "to_point": {
+        "x": 7954,
+        "y": 7147
+      },
+      "from_component": "capacitor_16",
+      "to_component": "bus_47",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 7954,
+        "y": 7147
+      },
+      "to_point": {
+        "x": 8235,
+        "y": 7147
+      },
+      "from_component": "bus_47",
+      "to_component": "bus_47",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 9136,
+        "y": 2124
+      },
+      "to_point": {
+        "x": 8710,
+        "y": 2124
+      },
+      "from_component": "switch_17",
+      "to_component": "switch_17",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 8710,
+        "y": 2124
+      },
+      "to_point": {
+        "x": 8710,
+        "y": 7147
+      },
+      "from_component": "switch_17",
+      "to_component": "bus_47",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 8710,
+        "y": 7147
+      },
+      "to_point": {
+        "x": 8285,
+        "y": 7147
+      },
+      "from_component": "bus_47",
+      "to_component": "bus_47",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 10603,
+        "y": 2104
+      },
+      "to_point": {
+        "x": 10476,
+        "y": 2104
+      },
+      "from_component": "breaker_18",
+      "to_component": "breaker_18",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 10476,
+        "y": 2104
+      },
+      "to_point": {
+        "x": 10476,
+        "y": 7147
+      },
+      "from_component": "breaker_18",
+      "to_component": "bus_48",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 10476,
+        "y": 7147
+      },
+      "to_point": {
+        "x": 10350,
+        "y": 7147
+      },
+      "from_component": "bus_48",
+      "to_component": "bus_48",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 12070,
+        "y": 2152
+      },
+      "to_point": {
+        "x": 11210,
+        "y": 2152
+      },
+      "from_component": "switch_19",
+      "to_component": "breaker_18",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 11210,
+        "y": 2152
+      },
+      "to_point": {
+        "x": 11210,
+        "y": 7147
+      },
+      "from_component": "breaker_18",
+      "to_component": "bus_48",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 11210,
+        "y": 7147
+      },
+      "to_point": {
+        "x": 10350,
+        "y": 7147
+      },
+      "from_component": "bus_48",
+      "to_component": "bus_48",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 13411,
+        "y": 2124
+      },
+      "to_point": {
+        "x": 11880,
+        "y": 2124
+      },
+      "from_component": "transformer_20",
+      "to_component": "switch_19",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 11880,
+        "y": 2124
+      },
+      "to_point": {
+        "x": 11880,
+        "y": 7147
+      },
+      "from_component": "switch_19",
+      "to_component": "bus_48",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 11880,
+        "y": 7147
+      },
+      "to_point": {
+        "x": 10350,
+        "y": 7147
+      },
+      "from_component": "bus_48",
+      "to_component": "bus_48",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 434,
+        "y": 3815
+      },
+      "to_point": {
+        "x": 1129,
+        "y": 3815
+      },
+      "from_component": "transformer_21",
+      "to_component": "load_22",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 1129,
+        "y": 3815
+      },
+      "to_point": {
+        "x": 1129,
+        "y": 7197
+      },
+      "from_component": "load_22",
+      "to_component": "capacitor_41",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 1129,
+        "y": 7197
+      },
+      "to_point": {
+        "x": 1824,
+        "y": 7197
+      },
+      "from_component": "capacitor_41",
+      "to_component": "bus_42",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 1901,
+        "y": 3815
+      },
+      "to_point": {
+        "x": 1862,
+        "y": 3815
+      },
+      "from_component": "load_22",
+      "to_component": "load_22",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 1862,
+        "y": 3815
+      },
+      "to_point": {
+        "x": 1862,
+        "y": 7197
+      },
+      "from_component": "load_22",
+      "to_component": "bus_42",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 1862,
+        "y": 7197
+      },
+      "to_point": {
+        "x": 1824,
+        "y": 7197
+      },
+      "from_component": "bus_42",
+      "to_component": "bus_42",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 3266,
+        "y": 3815
+      },
+      "to_point": {
+        "x": 2595,
+        "y": 3815
+      },
+      "from_component": "transformer_23",
+      "to_component": "transformer_23",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 2595,
+        "y": 3815
+      },
+      "to_point": {
+        "x": 2595,
+        "y": 7197
+      },
+      "from_component": "transformer_23",
+      "to_component": "bus_42",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 2595,
+        "y": 7197
+      },
+      "to_point": {
+        "x": 1924,
+        "y": 7197
+      },
+      "from_component": "bus_42",
+      "to_component": "bus_42",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 4735,
+        "y": 3815
+      },
+      "to_point": {
+        "x": 4785,
+        "y": 3815
+      },
+      "from_component": "load_24",
+      "to_component": "load_24",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 4785,
+        "y": 3815
+      },
+      "to_point": {
+        "x": 4785,
+        "y": 7197
+      },
+      "from_component": "load_24",
+      "to_component": "switch_44",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 4785,
+        "y": 7197
+      },
+      "to_point": {
+        "x": 4835,
+        "y": 7197
+      },
+      "from_component": "switch_44",
+      "to_component": "switch_44",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 6202,
+        "y": 3815
+      },
+      "to_point": {
+        "x": 6211,
+        "y": 3815
+      },
+      "from_component": "capacitor_25",
+      "to_component": "capacitor_25",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 6211,
+        "y": 3815
+      },
+      "to_point": {
+        "x": 6211,
+        "y": 7147
+      },
+      "from_component": "capacitor_25",
+      "to_component": "bus_46",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 6211,
+        "y": 7147
+      },
+      "to_point": {
+        "x": 6220,
+        "y": 7147
+      },
+      "from_component": "bus_46",
+      "to_component": "bus_46",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 7769,
+        "y": 3811
+      },
+      "to_point": {
+        "x": 8002,
+        "y": 3811
+      },
+      "from_component": "bus_26",
+      "to_component": "bus_26",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 8002,
+        "y": 3811
+      },
+      "to_point": {
+        "x": 8002,
+        "y": 7147
+      },
+      "from_component": "bus_26",
+      "to_component": "bus_47",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 8002,
+        "y": 7147
+      },
+      "to_point": {
+        "x": 8235,
+        "y": 7147
+      },
+      "from_component": "bus_47",
+      "to_component": "bus_47",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 9112,
+        "y": 3815
+      },
+      "to_point": {
+        "x": 8698,
+        "y": 3815
+      },
+      "from_component": "load_27",
+      "to_component": "load_27",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 8698,
+        "y": 3815
+      },
+      "to_point": {
+        "x": 8698,
+        "y": 7147
+      },
+      "from_component": "load_27",
+      "to_component": "bus_47",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 8698,
+        "y": 7147
+      },
+      "to_point": {
+        "x": 8285,
+        "y": 7147
+      },
+      "from_component": "bus_47",
+      "to_component": "bus_47",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 10715,
+        "y": 3861
+      },
+      "to_point": {
+        "x": 10532,
+        "y": 3861
+      },
+      "from_component": "generator_28",
+      "to_component": "generator_28",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 10532,
+        "y": 3861
+      },
+      "to_point": {
+        "x": 10532,
+        "y": 7147
+      },
+      "from_component": "generator_28",
+      "to_component": "bus_48",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 10532,
+        "y": 7147
+      },
+      "to_point": {
+        "x": 10350,
+        "y": 7147
+      },
+      "from_component": "bus_48",
+      "to_component": "bus_48",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 11918,
+        "y": 3875
+      },
+      "to_point": {
+        "x": 11134,
+        "y": 3875
+      },
+      "from_component": "load_29",
+      "to_component": "generator_28",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 11134,
+        "y": 3875
+      },
+      "to_point": {
+        "x": 11134,
+        "y": 7147
+      },
+      "from_component": "generator_28",
+      "to_component": "bus_48",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 11134,
+        "y": 7147
+      },
+      "to_point": {
+        "x": 10350,
+        "y": 7147
+      },
+      "from_component": "bus_48",
+      "to_component": "bus_48",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 13519,
+        "y": 3831
+      },
+      "to_point": {
+        "x": 11934,
+        "y": 3831
+      },
+      "from_component": "load_30",
+      "to_component": "load_29",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 11934,
+        "y": 3831
+      },
+      "to_point": {
+        "x": 11934,
+        "y": 7147
+      },
+      "from_component": "load_29",
+      "to_component": "bus_48",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 11934,
+        "y": 7147
+      },
+      "to_point": {
+        "x": 10350,
+        "y": 7147
+      },
+      "from_component": "bus_48",
+      "to_component": "bus_48",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 434,
+        "y": 5500
+      },
+      "to_point": {
+        "x": 1129,
+        "y": 5500
+      },
+      "from_component": "bus_31",
+      "to_component": "breaker_32",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 1129,
+        "y": 5500
+      },
+      "to_point": {
+        "x": 1129,
+        "y": 7197
+      },
+      "from_component": "breaker_32",
+      "to_component": "capacitor_41",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 1129,
+        "y": 7197
+      },
+      "to_point": {
+        "x": 1824,
+        "y": 7197
+      },
+      "from_component": "capacitor_41",
+      "to_component": "bus_42",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 1901,
+        "y": 5506
+      },
+      "to_point": {
+        "x": 1862,
+        "y": 5506
+      },
+      "from_component": "breaker_32",
+      "to_component": "breaker_32",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 1862,
+        "y": 5506
+      },
+      "to_point": {
+        "x": 1862,
+        "y": 7197
+      },
+      "from_component": "breaker_32",
+      "to_component": "bus_42",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 1862,
+        "y": 7197
+      },
+      "to_point": {
+        "x": 1824,
+        "y": 7197
+      },
+      "from_component": "bus_42",
+      "to_component": "bus_42",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 3268,
+        "y": 5506
+      },
+      "to_point": {
+        "x": 2596,
+        "y": 5506
+      },
+      "from_component": "bus_33",
+      "to_component": "bus_33",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 2596,
+        "y": 5506
+      },
+      "to_point": {
+        "x": 2596,
+        "y": 7197
+      },
+      "from_component": "bus_33",
+      "to_component": "bus_42",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 2596,
+        "y": 7197
+      },
+      "to_point": {
+        "x": 1924,
+        "y": 7197
+      },
+      "from_component": "bus_42",
+      "to_component": "bus_42",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 4735,
+        "y": 5506
+      },
+      "to_point": {
+        "x": 4785,
+        "y": 5506
+      },
+      "from_component": "switch_34",
+      "to_component": "switch_34",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 4785,
+        "y": 5506
+      },
+      "to_point": {
+        "x": 4785,
+        "y": 7197
+      },
+      "from_component": "switch_34",
+      "to_component": "switch_44",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 4785,
+        "y": 7197
+      },
+      "to_point": {
+        "x": 4835,
+        "y": 7197
+      },
+      "from_component": "switch_44",
+      "to_component": "switch_44",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 6202,
+        "y": 5506
+      },
+      "to_point": {
+        "x": 6211,
+        "y": 5506
+      },
+      "from_component": "switch_35",
+      "to_component": "switch_35",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 6211,
+        "y": 5506
+      },
+      "to_point": {
+        "x": 6211,
+        "y": 7147
+      },
+      "from_component": "switch_35",
+      "to_component": "bus_46",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 6211,
+        "y": 7147
+      },
+      "to_point": {
+        "x": 6220,
+        "y": 7147
+      },
+      "from_component": "bus_46",
+      "to_component": "bus_46",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 7769,
+        "y": 5506
+      },
+      "to_point": {
+        "x": 8002,
+        "y": 5506
+      },
+      "from_component": "generator_36",
+      "to_component": "generator_36",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 8002,
+        "y": 5506
+      },
+      "to_point": {
+        "x": 8002,
+        "y": 7147
+      },
+      "from_component": "generator_36",
+      "to_component": "bus_47",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 8002,
+        "y": 7147
+      },
+      "to_point": {
+        "x": 8235,
+        "y": 7147
+      },
+      "from_component": "bus_47",
+      "to_component": "bus_47",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 9136,
+        "y": 5506
+      },
+      "to_point": {
+        "x": 8710,
+        "y": 5506
+      },
+      "from_component": "load_37",
+      "to_component": "load_37",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 8710,
+        "y": 5506
+      },
+      "to_point": {
+        "x": 8710,
+        "y": 7147
+      },
+      "from_component": "load_37",
+      "to_component": "bus_47",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 8710,
+        "y": 7147
+      },
+      "to_point": {
+        "x": 8285,
+        "y": 7147
+      },
+      "from_component": "bus_47",
+      "to_component": "bus_47",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 10603,
+        "y": 5455
+      },
+      "to_point": {
+        "x": 10476,
+        "y": 5455
+      },
+      "from_component": "breaker_38",
+      "to_component": "breaker_38",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 10476,
+        "y": 5455
+      },
+      "to_point": {
+        "x": 10476,
+        "y": 7147
+      },
+      "from_component": "breaker_38",
+      "to_component": "bus_48",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 10476,
+        "y": 7147
+      },
+      "to_point": {
+        "x": 10350,
+        "y": 7147
+      },
+      "from_component": "bus_48",
+      "to_component": "bus_48",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 12070,
+        "y": 5506
+      },
+      "to_point": {
+        "x": 11210,
+        "y": 5506
+      },
+      "from_component": "breaker_39",
+      "to_component": "breaker_38",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 11210,
+        "y": 5506
+      },
+      "to_point": {
+        "x": 11210,
+        "y": 7147
+      },
+      "from_component": "breaker_38",
+      "to_component": "bus_48",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 11210,
+        "y": 7147
+      },
+      "to_point": {
+        "x": 10350,
+        "y": 7147
+      },
+      "from_component": "bus_48",
+      "to_component": "bus_48",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 13537,
+        "y": 5518
+      },
+      "to_point": {
+        "x": 11943,
+        "y": 5518
+      },
+      "from_component": "switch_40",
+      "to_component": "breaker_39",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 11943,
+        "y": 5518
+      },
+      "to_point": {
+        "x": 11943,
+        "y": 7147
+      },
+      "from_component": "breaker_39",
+      "to_component": "bus_48",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 11943,
+        "y": 7147
+      },
+      "to_point": {
+        "x": 10350,
+        "y": 7147
+      },
+      "from_component": "bus_48",
+      "to_component": "bus_48",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 434,
+        "y": 7197
+      },
+      "to_point": {
+        "x": 1129,
+        "y": 7197
+      },
+      "from_component": "capacitor_41",
+      "to_component": "capacitor_41",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 1129,
+        "y": 7197
+      },
+      "to_point": {
+        "x": 1129,
+        "y": 7197
+      },
+      "from_component": "capacitor_41",
+      "to_component": "capacitor_41",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 1129,
+        "y": 7197
+      },
+      "to_point": {
+        "x": 1824,
+        "y": 7197
+      },
+      "from_component": "capacitor_41",
+      "to_component": "bus_42",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 3268,
+        "y": 7197
+      },
+      "to_point": {
+        "x": 2596,
+        "y": 7197
+      },
+      "from_component": "switch_43",
+      "to_component": "bus_42",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 2596,
+        "y": 7197
+      },
+      "to_point": {
+        "x": 2596,
+        "y": 7197
+      },
+      "from_component": "bus_42",
+      "to_component": "bus_42",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 2596,
+        "y": 7197
+      },
+      "to_point": {
+        "x": 1924,
+        "y": 7197
+      },
+      "from_component": "bus_42",
+      "to_component": "bus_42",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 6258,
+        "y": 7197
+      },
+      "to_point": {
+        "x": 6239,
+        "y": 7197
+      },
+      "from_component": "generator_45",
+      "to_component": "bus_46",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 6239,
+        "y": 7197
+      },
+      "to_point": {
+        "x": 6239,
+        "y": 7147
+      },
+      "from_component": "bus_46",
+      "to_component": "bus_46",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 6239,
+        "y": 7147
+      },
+      "to_point": {
+        "x": 6220,
+        "y": 7147
+      },
+      "from_component": "bus_46",
+      "to_component": "bus_46",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 1924,
+        "y": 7197
+      },
+      "to_point": {
+        "x": 1924,
+        "y": 7197
+      },
+      "from_component": "bus_42",
+      "to_component": "bus_42",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 1924,
+        "y": 7197
+      },
+      "to_point": {
+        "x": 4735,
+        "y": 7197
+      },
+      "from_component": "bus_42",
+      "to_component": "switch_44",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 4735,
+        "y": 7197
+      },
+      "to_point": {
+        "x": 4735,
+        "y": 7197
+      },
+      "from_component": "switch_44",
+      "to_component": "switch_44",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 4835,
+        "y": 7197
+      },
+      "to_point": {
+        "x": 4835,
+        "y": 7172
+      },
+      "from_component": "switch_44",
+      "to_component": "switch_44",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 4835,
+        "y": 7172
+      },
+      "to_point": {
+        "x": 6145,
+        "y": 7172
+      },
+      "from_component": "switch_44",
+      "to_component": "bus_46",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 6145,
+        "y": 7172
+      },
+      "to_point": {
+        "x": 6170,
+        "y": 7147
+      },
+      "from_component": "bus_46",
+      "to_component": "bus_46",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 6220,
+        "y": 7147
+      },
+      "to_point": {
+        "x": 6245,
+        "y": 7147
+      },
+      "from_component": "bus_46",
+      "to_component": "bus_46",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 6245,
+        "y": 7147
+      },
+      "to_point": {
+        "x": 8210,
+        "y": 7147
+      },
+      "from_component": "bus_46",
+      "to_component": "bus_47",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 8210,
+        "y": 7147
+      },
+      "to_point": {
+        "x": 8235,
+        "y": 7147
+      },
+      "from_component": "bus_47",
+      "to_component": "bus_47",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 8285,
+        "y": 7147
+      },
+      "to_point": {
+        "x": 8310,
+        "y": 7147
+      },
+      "from_component": "bus_47",
+      "to_component": "bus_47",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 8310,
+        "y": 7147
+      },
+      "to_point": {
+        "x": 10275,
+        "y": 7147
+      },
+      "from_component": "bus_47",
+      "to_component": "bus_48",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 10275,
+        "y": 7147
+      },
+      "to_point": {
+        "x": 10300,
+        "y": 7147
+      },
+      "from_component": "bus_48",
+      "to_component": "bus_48",
+      "type": "direct"
+    }
+  ]
+}

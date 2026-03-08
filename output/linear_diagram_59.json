@@ -1,0 +1,1089 @@
+{
+  "metadata": {
+    "canvas_size": {
+      "width": 9530,
+      "height": 2404
+    },
+    "total_components": 26,
+    "total_connections": 25
+  },
+  "components": [
+    {
+      "id": "generator_1",
+      "type": "generator",
+      "voltage": 22000,
+      "position": {
+        "x": 466,
+        "y": 695,
+        "width": 100,
+        "height": 100
+      },
+      "connection_points": {
+        "left": {
+          "x": 466,
+          "y": 745
+        },
+        "right": {
+          "x": 566,
+          "y": 745
+        }
+      },
+      "connections": {
+        "left_connected_to": [],
+        "right_connected_to": [
+          "transformer_2"
+        ]
+      }
+    },
+    {
+      "id": "transformer_2",
+      "type": "transformer",
+      "voltage": 66000,
+      "position": {
+        "x": 1099,
+        "y": 730,
+        "width": 100,
+        "height": 100
+      },
+      "connection_points": {
+        "left": {
+          "x": 1099,
+          "y": 780
+        },
+        "right": {
+          "x": 1199,
+          "y": 780
+        }
+      },
+      "connections": {
+        "left_connected_to": [
+          "generator_1"
+        ],
+        "right_connected_to": [
+          "transformer_3"
+        ]
+      }
+    },
+    {
+      "id": "transformer_3",
+      "type": "transformer",
+      "voltage": 6600,
+      "position": {
+        "x": 1808,
+        "y": 730,
+        "width": 100,
+        "height": 100
+      },
+      "connection_points": {
+        "left": {
+          "x": 1808,
+          "y": 780
+        },
+        "right": {
+          "x": 1908,
+          "y": 780
+        }
+      },
+      "connections": {
+        "left_connected_to": [
+          "transformer_2"
+        ],
+        "right_connected_to": [
+          "generator_4"
+        ]
+      }
+    },
+    {
+      "id": "generator_4",
+      "type": "generator",
+      "voltage": 66000,
+      "position": {
+        "x": 2516,
+        "y": 730,
+        "width": 100,
+        "height": 100
+      },
+      "connection_points": {
+        "left": {
+          "x": 2516,
+          "y": 780
+        },
+        "right": {
+          "x": 2616,
+          "y": 780
+        }
+      },
+      "connections": {
+        "left_connected_to": [
+          "transformer_3"
+        ],
+        "right_connected_to": [
+          "breaker_5"
+        ]
+      }
+    },
+    {
+      "id": "breaker_5",
+      "type": "breaker",
+      "voltage": 11000,
+      "position": {
+        "x": 3166,
+        "y": 730,
+        "width": 100,
+        "height": 100
+      },
+      "connection_points": {
+        "left": {
+          "x": 3166,
+          "y": 780
+        },
+        "right": {
+          "x": 3266,
+          "y": 780
+        }
+      },
+      "connections": {
+        "left_connected_to": [
+          "generator_4"
+        ],
+        "right_connected_to": [
+          "switch_6"
+        ]
+      }
+    },
+    {
+      "id": "switch_6",
+      "type": "switch",
+      "voltage": 11000,
+      "position": {
+        "x": 3835,
+        "y": 716,
+        "width": 100,
+        "height": 100
+      },
+      "connection_points": {
+        "left": {
+          "x": 3835,
+          "y": 766
+        },
+        "right": {
+          "x": 3935,
+          "y": 766
+        }
+      },
+      "connections": {
+        "left_connected_to": [
+          "breaker_5"
+        ],
+        "right_connected_to": [
+          "generator_7"
+        ]
+      }
+    },
+    {
+      "id": "generator_7",
+      "type": "generator",
+      "voltage": 13200,
+      "position": {
+        "x": 4539,
+        "y": 796,
+        "width": 100,
+        "height": 100
+      },
+      "connection_points": {
+        "left": {
+          "x": 4539,
+          "y": 846
+        },
+        "right": {
+          "x": 4639,
+          "y": 846
+        }
+      },
+      "connections": {
+        "left_connected_to": [
+          "switch_6"
+        ],
+        "right_connected_to": [
+          "breaker_8"
+        ]
+      }
+    },
+    {
+      "id": "breaker_8",
+      "type": "breaker",
+      "voltage": 33000,
+      "position": {
+        "x": 5198,
+        "y": 730,
+        "width": 100,
+        "height": 100
+      },
+      "connection_points": {
+        "left": {
+          "x": 5198,
+          "y": 780
+        },
+        "right": {
+          "x": 5298,
+          "y": 780
+        }
+      },
+      "connections": {
+        "left_connected_to": [
+          "generator_7"
+        ],
+        "right_connected_to": [
+          "switch_9"
+        ]
+      }
+    },
+    {
+      "id": "switch_9",
+      "type": "switch",
+      "voltage": 400,
+      "position": {
+        "x": 5880,
+        "y": 730,
+        "width": 100,
+        "height": 100
+      },
+      "connection_points": {
+        "left": {
+          "x": 5880,
+          "y": 780
+        },
+        "right": {
+          "x": 5980,
+          "y": 780
+        }
+      },
+      "connections": {
+        "left_connected_to": [
+          "breaker_8"
+        ],
+        "right_connected_to": [
+          "generator_10"
+        ]
+      }
+    },
+    {
+      "id": "generator_10",
+      "type": "generator",
+      "voltage": 22000,
+      "position": {
+        "x": 6589,
+        "y": 683,
+        "width": 100,
+        "height": 100
+      },
+      "connection_points": {
+        "left": {
+          "x": 6589,
+          "y": 733
+        },
+        "right": {
+          "x": 6689,
+          "y": 733
+        }
+      },
+      "connections": {
+        "left_connected_to": [
+          "switch_9"
+        ],
+        "right_connected_to": [
+          "generator_11"
+        ]
+      }
+    },
+    {
+      "id": "generator_11",
+      "type": "generator",
+      "voltage": 22000,
+      "position": {
+        "x": 7272,
+        "y": 730,
+        "width": 100,
+        "height": 100
+      },
+      "connection_points": {
+        "left": {
+          "x": 7272,
+          "y": 780
+        },
+        "right": {
+          "x": 7372,
+          "y": 780
+        }
+      },
+      "connections": {
+        "left_connected_to": [
+          "generator_10"
+        ],
+        "right_connected_to": [
+          "generator_12"
+        ]
+      }
+    },
+    {
+      "id": "generator_12",
+      "type": "generator",
+      "voltage": 66000,
+      "position": {
+        "x": 7913,
+        "y": 730,
+        "width": 100,
+        "height": 100
+      },
+      "connection_points": {
+        "left": {
+          "x": 7913,
+          "y": 780
+        },
+        "right": {
+          "x": 8013,
+          "y": 780
+        }
+      },
+      "connections": {
+        "left_connected_to": [
+          "generator_11"
+        ],
+        "right_connected_to": [
+          "transformer_13"
+        ]
+      }
+    },
+    {
+      "id": "transformer_13",
+      "type": "transformer",
+      "voltage": 33000,
+      "position": {
+        "x": 8600,
+        "y": 730,
+        "width": 100,
+        "height": 100
+      },
+      "connection_points": {
+        "left": {
+          "x": 8600,
+          "y": 780
+        },
+        "right": {
+          "x": 8700,
+          "y": 780
+        }
+      },
+      "connections": {
+        "left_connected_to": [
+          "generator_12"
+        ],
+        "right_connected_to": [
+          "bus_14"
+        ]
+      }
+    },
+    {
+      "id": "bus_14",
+      "type": "bus",
+      "voltage": 33000,
+      "position": {
+        "x": 9234,
+        "y": 730,
+        "width": 100,
+        "height": 100
+      },
+      "connection_points": {
+        "left": {
+          "x": 9234,
+          "y": 780
+        },
+        "right": {
+          "x": 9334,
+          "y": 780
+        }
+      },
+      "connections": {
+        "left_connected_to": [
+          "transformer_13"
+        ],
+        "right_connected_to": [
+          "transformer_15"
+        ]
+      }
+    },
+    {
+      "id": "transformer_15",
+      "type": "transformer",
+      "voltage": 22000,
+      "position": {
+        "x": 9925,
+        "y": 774,
+        "width": 100,
+        "height": 100
+      },
+      "connection_points": {
+        "left": {
+          "x": 9925,
+          "y": 824
+        },
+        "right": {
+          "x": 10025,
+          "y": 824
+        }
+      },
+      "connections": {
+        "left_connected_to": [
+          "bus_14"
+        ],
+        "right_connected_to": [
+          "capacitor_16"
+        ]
+      }
+    },
+    {
+      "id": "capacitor_16",
+      "type": "capacitor",
+      "voltage": 1100,
+      "position": {
+        "x": 10607,
+        "y": 730,
+        "width": 100,
+        "height": 100
+      },
+      "connection_points": {
+        "left": {
+          "x": 10607,
+          "y": 780
+        },
+        "right": {
+          "x": 10707,
+          "y": 780
+        }
+      },
+      "connections": {
+        "left_connected_to": [
+          "transformer_15"
+        ],
+        "right_connected_to": [
+          "load_17"
+        ]
+      }
+    },
+    {
+      "id": "load_17",
+      "type": "load",
+      "voltage": 230,
+      "position": {
+        "x": 11287,
+        "y": 730,
+        "width": 100,
+        "height": 100
+      },
+      "connection_points": {
+        "left": {
+          "x": 11287,
+          "y": 780
+        },
+        "right": {
+          "x": 11387,
+          "y": 780
+        }
+      },
+      "connections": {
+        "left_connected_to": [
+          "capacitor_16"
+        ],
+        "right_connected_to": [
+          "capacitor_18"
+        ]
+      }
+    },
+    {
+      "id": "capacitor_18",
+      "type": "capacitor",
+      "voltage": 6600,
+      "position": {
+        "x": 11947,
+        "y": 730,
+        "width": 100,
+        "height": 100
+      },
+      "connection_points": {
+        "left": {
+          "x": 11947,
+          "y": 780
+        },
+        "right": {
+          "x": 12047,
+          "y": 780
+        }
+      },
+      "connections": {
+        "left_connected_to": [
+          "load_17"
+        ],
+        "right_connected_to": [
+          "switch_19"
+        ]
+      }
+    },
+    {
+      "id": "switch_19",
+      "type": "switch",
+      "voltage": 3300,
+      "position": {
+        "x": 12640,
+        "y": 777,
+        "width": 100,
+        "height": 100
+      },
+      "connection_points": {
+        "left": {
+          "x": 12640,
+          "y": 827
+        },
+        "right": {
+          "x": 12740,
+          "y": 827
+        }
+      },
+      "connections": {
+        "left_connected_to": [
+          "capacitor_18"
+        ],
+        "right_connected_to": [
+          "breaker_20"
+        ]
+      }
+    },
+    {
+      "id": "breaker_20",
+      "type": "breaker",
+      "voltage": 33000,
+      "position": {
+        "x": 13328,
+        "y": 697,
+        "width": 100,
+        "height": 100
+      },
+      "connection_points": {
+        "left": {
+          "x": 13328,
+          "y": 747
+        },
+        "right": {
+          "x": 13428,
+          "y": 747
+        }
+      },
+      "connections": {
+        "left_connected_to": [
+          "switch_19"
+        ],
+        "right_connected_to": [
+          "transformer_21"
+        ]
+      }
+    },
+    {
+      "id": "transformer_21",
+      "type": "transformer",
+      "voltage": 6600,
+      "position": {
+        "x": 13990,
+        "y": 644,
+        "width": 100,
+        "height": 100
+      },
+      "connection_points": {
+        "left": {
+          "x": 13990,
+          "y": 694
+        },
+        "right": {
+          "x": 14090,
+          "y": 694
+        }
+      },
+      "connections": {
+        "left_connected_to": [
+          "breaker_20"
+        ],
+        "right_connected_to": [
+          "generator_22"
+        ]
+      }
+    },
+    {
+      "id": "generator_22",
+      "type": "generator",
+      "voltage": 11000,
+      "position": {
+        "x": 14697,
+        "y": 730,
+        "width": 100,
+        "height": 100
+      },
+      "connection_points": {
+        "left": {
+          "x": 14697,
+          "y": 780
+        },
+        "right": {
+          "x": 14797,
+          "y": 780
+        }
+      },
+      "connections": {
+        "left_connected_to": [
+          "transformer_21"
+        ],
+        "right_connected_to": [
+          "switch_23"
+        ]
+      }
+    },
+    {
+      "id": "switch_23",
+      "type": "switch",
+      "voltage": 66000,
+      "position": {
+        "x": 15353,
+        "y": 730,
+        "width": 100,
+        "height": 100
+      },
+      "connection_points": {
+        "left": {
+          "x": 15353,
+          "y": 780
+        },
+        "right": {
+          "x": 15453,
+          "y": 780
+        }
+      },
+      "connections": {
+        "left_connected_to": [
+          "generator_22"
+        ],
+        "right_connected_to": [
+          "load_24"
+        ]
+      }
+    },
+    {
+      "id": "load_24",
+      "type": "load",
+      "voltage": 400,
+      "position": {
+        "x": 16021,
+        "y": 730,
+        "width": 100,
+        "height": 100
+      },
+      "connection_points": {
+        "left": {
+          "x": 16021,
+          "y": 780
+        },
+        "right": {
+          "x": 16121,
+          "y": 780
+        }
+      },
+      "connections": {
+        "left_connected_to": [
+          "switch_23"
+        ],
+        "right_connected_to": [
+          "generator_25"
+        ]
+      }
+    },
+    {
+      "id": "generator_25",
+      "type": "generator",
+      "voltage": 66000,
+      "position": {
+        "x": 16707,
+        "y": 660,
+        "width": 100,
+        "height": 100
+      },
+      "connection_points": {
+        "left": {
+          "x": 16707,
+          "y": 710
+        },
+        "right": {
+          "x": 16807,
+          "y": 710
+        }
+      },
+      "connections": {
+        "left_connected_to": [
+          "load_24"
+        ],
+        "right_connected_to": [
+          "load_26"
+        ]
+      }
+    },
+    {
+      "id": "load_26",
+      "type": "load",
+      "voltage": 230,
+      "position": {
+        "x": 17386,
+        "y": 696,
+        "width": 100,
+        "height": 100
+      },
+      "connection_points": {
+        "left": {
+          "x": 17386,
+          "y": 746
+        },
+        "right": {
+          "x": 17486,
+          "y": 746
+        }
+      },
+      "connections": {
+        "left_connected_to": [
+          "generator_25"
+        ],
+        "right_connected_to": []
+      }
+    }
+  ],
+  "connections": [
+    {
+      "from_point": {
+        "x": 566,
+        "y": 745
+      },
+      "to_point": {
+        "x": 1099,
+        "y": 780
+      },
+      "from_component": "generator_1",
+      "to_component": "transformer_2",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 1199,
+        "y": 780
+      },
+      "to_point": {
+        "x": 1808,
+        "y": 780
+      },
+      "from_component": "transformer_2",
+      "to_component": "transformer_3",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 1908,
+        "y": 780
+      },
+      "to_point": {
+        "x": 2516,
+        "y": 780
+      },
+      "from_component": "transformer_3",
+      "to_component": "generator_4",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 2616,
+        "y": 780
+      },
+      "to_point": {
+        "x": 3166,
+        "y": 780
+      },
+      "from_component": "generator_4",
+      "to_component": "breaker_5",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 3266,
+        "y": 780
+      },
+      "to_point": {
+        "x": 3835,
+        "y": 766
+      },
+      "from_component": "breaker_5",
+      "to_component": "switch_6",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 3935,
+        "y": 766
+      },
+      "to_point": {
+        "x": 4539,
+        "y": 846
+      },
+      "from_component": "switch_6",
+      "to_component": "generator_7",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 4639,
+        "y": 846
+      },
+      "to_point": {
+        "x": 5198,
+        "y": 780
+      },
+      "from_component": "generator_7",
+      "to_component": "breaker_8",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 5298,
+        "y": 780
+      },
+      "to_point": {
+        "x": 5880,
+        "y": 780
+      },
+      "from_component": "breaker_8",
+      "to_component": "switch_9",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 5980,
+        "y": 780
+      },
+      "to_point": {
+        "x": 6589,
+        "y": 733
+      },
+      "from_component": "switch_9",
+      "to_component": "generator_10",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 6689,
+        "y": 733
+      },
+      "to_point": {
+        "x": 7272,
+        "y": 780
+      },
+      "from_component": "generator_10",
+      "to_component": "generator_11",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 7372,
+        "y": 780
+      },
+      "to_point": {
+        "x": 7913,
+        "y": 780
+      },
+      "from_component": "generator_11",
+      "to_component": "generator_12",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 8013,
+        "y": 780
+      },
+      "to_point": {
+        "x": 8600,
+        "y": 780
+      },
+      "from_component": "generator_12",
+      "to_component": "transformer_13",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 8700,
+        "y": 780
+      },
+      "to_point": {
+        "x": 9234,
+        "y": 780
+      },
+      "from_component": "transformer_13",
+      "to_component": "bus_14",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 9334,
+        "y": 780
+      },
+      "to_point": {
+        "x": 9925,
+        "y": 824
+      },
+      "from_component": "bus_14",
+      "to_component": "transformer_15",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 10025,
+        "y": 824
+      },
+      "to_point": {
+        "x": 10607,
+        "y": 780
+      },
+      "from_component": "transformer_15",
+      "to_component": "capacitor_16",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 10707,
+        "y": 780
+      },
+      "to_point": {
+        "x": 11287,
+        "y": 780
+      },
+      "from_component": "capacitor_16",
+      "to_component": "load_17",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 11387,
+        "y": 780
+      },
+      "to_point": {
+        "x": 11947,
+        "y": 780
+      },
+      "from_component": "load_17",
+      "to_component": "capacitor_18",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 12047,
+        "y": 780
+      },
+      "to_point": {
+        "x": 12640,
+        "y": 827
+      },
+      "from_component": "capacitor_18",
+      "to_component": "switch_19",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 12740,
+        "y": 827
+      },
+      "to_point": {
+        "x": 13328,
+        "y": 747
+      },
+      "from_component": "switch_19",
+      "to_component": "breaker_20",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 13428,
+        "y": 747
+      },
+      "to_point": {
+        "x": 13990,
+        "y": 694
+      },
+      "from_component": "breaker_20",
+      "to_component": "transformer_21",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 14090,
+        "y": 694
+      },
+      "to_point": {
+        "x": 14697,
+        "y": 780
+      },
+      "from_component": "transformer_21",
+      "to_component": "generator_22",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 14797,
+        "y": 780
+      },
+      "to_point": {
+        "x": 15353,
+        "y": 780
+      },
+      "from_component": "generator_22",
+      "to_component": "switch_23",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 15453,
+        "y": 780
+      },
+      "to_point": {
+        "x": 16021,
+        "y": 780
+      },
+      "from_component": "switch_23",
+      "to_component": "load_24",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 16121,
+        "y": 780
+      },
+      "to_point": {
+        "x": 16707,
+        "y": 710
+      },
+      "from_component": "load_24",
+      "to_component": "generator_25",
+      "type": "direct"
+    },
+    {
+      "from_point": {
+        "x": 16807,
+        "y": 710
+      },
+      "to_point": {
+        "x": 17386,
+        "y": 746
+      },
+      "from_component": "generator_25",
+      "to_component": "load_26",
+      "type": "direct"
+    }
+  ]
+}
