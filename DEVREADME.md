@@ -33,3 +33,8 @@
 3. /dataset: Stores noisy components used for detection
 4. /scripts: Stores code
 5. /results: Marked symbol diagrams and JSONs stored here
+
+## Important import functions
+
+1. preprocessing_image_symbols() (from preprocessing_symbols)
+2. preprocessing_image_text() (from preprocessing_text)

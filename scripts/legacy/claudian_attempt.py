@@ -10,7 +10,7 @@ import cv2
 import numpy as np
 from PIL import Image, ImageDraw, ImageFont
 
-from noise_component_classifier import ComponentClassifier, NoiseGenerator
+from scripts.legacy.noise_component_classifier import ComponentClassifier, NoiseGenerator
 from components import ComponentGenerator
 
 
@@ -384,7 +384,7 @@ class ComponentAnnotator:
 
 
 class ComponentDetectionPipeline:
-    def __init__(self, model_path="component_classifier.h5", symbol_dir="symbols"):
+    def __init__(self, model_path="//..//models//legacy//component_classifier.h5", symbol_dir="symbols"):
         self.model_path = model_path
         self.symbol_dir = symbol_dir
         self.classifier = None

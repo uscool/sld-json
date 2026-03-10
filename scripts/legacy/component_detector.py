@@ -4,7 +4,7 @@ from PIL import Image, ImageDraw, ImageFont
 import json
 from pathlib import Path
 import cv2
-from noise_component_classifier import ComponentClassifier, NoiseGenerator
+from scripts.legacy.noise_component_classifier import ComponentClassifier, NoiseGenerator
 from components import ComponentGenerator
 
 
