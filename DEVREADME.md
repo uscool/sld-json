@@ -1,7 +1,8 @@
 # Status and functionality
 
 @@ File repo README for a quick refresher dev guide @@
-*Courtesy of Ujjwal Sharma TM*
+*Courtesy of Ujjwal Sharma TM and Ishaan Sarode*
+*Courtesy of Pranav Iyer*
 
 ```diff
 + components.py
