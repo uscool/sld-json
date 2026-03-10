@@ -5,7 +5,7 @@ import json
 from pathlib import Path
 import cv2
 from scripts.legacy.noise_component_classifier import ComponentClassifier, NoiseGenerator
-from components import ComponentGenerator
+from scripts.legacy.components import ComponentGenerator
 
 
 class SlidingWindowDetector:

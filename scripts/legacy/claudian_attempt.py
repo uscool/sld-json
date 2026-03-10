@@ -11,7 +11,7 @@ import numpy as np
 from PIL import Image, ImageDraw, ImageFont
 
 from scripts.legacy.noise_component_classifier import ComponentClassifier, NoiseGenerator
-from components import ComponentGenerator
+from scripts.legacy.components import ComponentGenerator
 
 
 # ──────────────────────────────────────────────────────────────────────────────

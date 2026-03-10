@@ -355,7 +355,7 @@ class ComponentClassifier:
         self.model = keras.models.load_model(filepath)
         # rebuild label encoder using component types from generator
         try:
-            from components import ComponentGenerator
+            from scripts.legacy.components import ComponentGenerator
 
             gen = ComponentGenerator()
             types = gen.get_component_types()
@@ -387,7 +387,7 @@ class ClassifierPipeline:
     def setup_symbols(self):
         if not os.path.exists(self.symbol_dir) or len(os.listdir(self.symbol_dir)) == 0:
             print("Generating component symbols...")
-            from components import ComponentGenerator
+            from scripts.legacy.components import ComponentGenerator
 
             gen = ComponentGenerator(self.symbol_dir)
             gen.generate_all_symbols()
@@ -418,7 +418,7 @@ class ClassifierPipeline:
     def load_and_predict(self, image_path, model_path=None):
         if model_path is None:
             model_path = self.model_path
-        from components import ComponentGenerator
+        from scripts.legacy.components import ComponentGenerator
 
         gen = ComponentGenerator(self.symbol_dir)
         component_types = gen.get_component_types()
@@ -481,7 +481,7 @@ def main():
     pipeline = ClassifierPipeline(model_path=args.model)
 
     if args.train:
-        from components import ComponentGenerator
+        from scripts.legacy.components import ComponentGenerator
 
         gen = ComponentGenerator()
         component_types = gen.get_component_types()

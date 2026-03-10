@@ -6,7 +6,7 @@ This service generates randomized diagrams based on set rules.
 import random
 import os
 import argparse
-from components import ComponentGenerator
+from scripts.legacy.components import ComponentGenerator
 from layout_engine import LayoutEngine
 
 
