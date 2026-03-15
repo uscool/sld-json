@@ -81,6 +81,38 @@
       "bay_id": "BAY_5"
     },
     {
+      "id": "BRK_6_A",
+      "label": "11kV_06_CB1",
+      "type": "Breaker",
+      "voltage": "11kV",
+      "bus_role": null,
+      "bay_id": "BAY_6"
+    },
+    {
+      "id": "BRK_6_B",
+      "label": "11kV_06_CB2",
+      "type": "Breaker",
+      "voltage": "11kV",
+      "bus_role": null,
+      "bay_id": "BAY_6"
+    },
+    {
+      "id": "BRK_7_A",
+      "label": "11kV_07_CB1",
+      "type": "Breaker",
+      "voltage": "11kV",
+      "bus_role": null,
+      "bay_id": "BAY_7"
+    },
+    {
+      "id": "BRK_7_B",
+      "label": "11kV_07_CB2",
+      "type": "Breaker",
+      "voltage": "11kV",
+      "bus_role": null,
+      "bay_id": "BAY_7"
+    },
+    {
       "id": "BUS_001",
       "label": "11kV_BUS_A",
       "type": "Bus",
@@ -129,6 +161,14 @@
       "bay_id": null
     },
     {
+      "id": "GS_1",
+      "label": "11kV-GEN-01",
+      "type": "GridSource",
+      "voltage": "11kV",
+      "bus_role": null,
+      "bay_id": null
+    },
+    {
       "id": "ISO_A_1",
       "label": "11kV_01_DSA",
       "type": "Isolator",
@@ -167,6 +207,22 @@
       "voltage": "11kV",
       "bus_role": null,
       "bay_id": "BAY_5"
+    },
+    {
+      "id": "ISO_A_6",
+      "label": "11kV_06_DSA",
+      "type": "Isolator",
+      "voltage": "11kV",
+      "bus_role": null,
+      "bay_id": "BAY_6"
+    },
+    {
+      "id": "ISO_A_7",
+      "label": "11kV_07_DSA",
+      "type": "Isolator",
+      "voltage": "11kV",
+      "bus_role": null,
+      "bay_id": "BAY_7"
     },
     {
       "id": "ISO_B_1",
@@ -209,8 +265,32 @@
       "bay_id": "BAY_5"
     },
     {
+      "id": "ISO_B_6",
+      "label": "11kV_06_DSB",
+      "type": "Isolator",
+      "voltage": "11kV",
+      "bus_role": null,
+      "bay_id": "BAY_6"
+    },
+    {
+      "id": "ISO_B_7",
+      "label": "11kV_07_DSB",
+      "type": "Isolator",
+      "voltage": "11kV",
+      "bus_role": null,
+      "bay_id": "BAY_7"
+    },
+    {
       "id": "TR_UP_1",
       "label": "11kV-TR-01",
+      "type": "Transformer",
+      "voltage": "11kV",
+      "bus_role": null,
+      "bay_id": null
+    },
+    {
+      "id": "TR_UP_2",
+      "label": "11kV-TR-02",
       "type": "Transformer",
       "voltage": "11kV",
       "bus_role": null,
@@ -219,80 +299,12 @@
   ],
   "connections": [
     {
-      "from": "BUS_001",
-      "to": "ISO_A_4"
-    },
-    {
-      "from": "BUS_002",
-      "to": "ISO_B_1"
-    },
-    {
-      "from": "BUS_002",
-      "to": "ISO_B_2"
-    },
-    {
-      "from": "BUS_001",
-      "to": "ISO_A_5"
-    },
-    {
-      "from": "BRK_3_B",
-      "to": "FDR_3"
-    },
-    {
-      "from": "ISO_B_2",
-      "to": "BRK_2_B"
-    },
-    {
-      "from": "BRK_4_B",
-      "to": "FDR_2"
-    },
-    {
-      "from": "BRK_5_B",
-      "to": "FDR_1"
-    },
-    {
-      "from": "BRK_4_A",
-      "to": "FDR_2"
-    },
-    {
-      "from": "ISO_A_5",
-      "to": "BRK_5_A"
-    },
-    {
-      "from": "BUS_002",
-      "to": "ISO_B_5"
-    },
-    {
-      "from": "ISO_B_3",
-      "to": "BRK_3_B"
-    },
-    {
-      "from": "BRK_3_A",
-      "to": "FDR_3"
-    },
-    {
-      "from": "ISO_B_5",
-      "to": "BRK_5_B"
-    },
-    {
-      "from": "ISO_A_2",
-      "to": "BRK_2_A"
-    },
-    {
-      "from": "ISO_A_1",
-      "to": "BRK_1_A"
-    },
-    {
       "from": "ISO_A_3",
       "to": "BRK_3_A"
     },
     {
-      "from": "BUS_001",
-      "to": "ISO_A_3"
-    },
-    {
-      "from": "BUS_001",
-      "to": "ISO_A_2"
+      "from": "ISO_B_1",
+      "to": "BRK_1_B"
     },
     {
       "from": "ISO_B_4",
@@ -300,43 +312,159 @@
     },
     {
       "from": "BUS_002",
-      "to": "ISO_B_3"
+      "to": "ISO_B_1"
+    },
+    {
+      "from": "ISO_B_3",
+      "to": "BRK_3_B"
+    },
+    {
+      "from": "ISO_B_5",
+      "to": "BRK_5_B"
+    },
+    {
+      "from": "BUS_001",
+      "to": "ISO_A_2"
+    },
+    {
+      "from": "BUS_002",
+      "to": "ISO_B_2"
+    },
+    {
+      "from": "BRK_1_A",
+      "to": "TR_UP_2"
+    },
+    {
+      "from": "BRK_3_B",
+      "to": "FDR_4"
     },
     {
       "from": "BUS_001",
       "to": "ISO_A_1"
     },
     {
-      "from": "BRK_2_B",
-      "to": "FDR_4"
+      "from": "BUS_002",
+      "to": "ISO_B_6"
     },
     {
-      "from": "ISO_B_1",
-      "to": "BRK_1_B"
+      "from": "ISO_A_2",
+      "to": "BRK_2_A"
     },
     {
-      "from": "BRK_1_B",
-      "to": "TR_UP_1"
-    },
-    {
-      "from": "BRK_5_A",
+      "from": "BRK_6_A",
       "to": "FDR_1"
     },
     {
-      "from": "BRK_1_A",
+      "from": "BUS_002",
+      "to": "ISO_B_3"
+    },
+    {
+      "from": "BRK_4_B",
+      "to": "FDR_3"
+    },
+    {
+      "from": "ISO_A_5",
+      "to": "BRK_5_A"
+    },
+    {
+      "from": "BRK_1_B",
+      "to": "TR_UP_2"
+    },
+    {
+      "from": "BRK_5_A",
+      "to": "FDR_2"
+    },
+    {
+      "from": "ISO_B_2",
+      "to": "BRK_2_B"
+    },
+    {
+      "from": "BUS_001",
+      "to": "ISO_A_3"
+    },
+    {
+      "from": "ISO_B_7",
+      "to": "BRK_7_B"
+    },
+    {
+      "from": "BRK_2_B",
       "to": "TR_UP_1"
+    },
+    {
+      "from": "ISO_A_7",
+      "to": "BRK_7_A"
+    },
+    {
+      "from": "BRK_7_A",
+      "to": "GS_1"
+    },
+    {
+      "from": "BUS_002",
+      "to": "ISO_B_5"
+    },
+    {
+      "from": "BUS_002",
+      "to": "ISO_B_7"
+    },
+    {
+      "from": "BRK_5_B",
+      "to": "FDR_2"
+    },
+    {
+      "from": "ISO_A_1",
+      "to": "BRK_1_A"
+    },
+    {
+      "from": "BRK_3_A",
+      "to": "FDR_4"
+    },
+    {
+      "from": "BUS_001",
+      "to": "ISO_A_5"
+    },
+    {
+      "from": "ISO_A_4",
+      "to": "BRK_4_A"
+    },
+    {
+      "from": "BRK_2_A",
+      "to": "TR_UP_1"
+    },
+    {
+      "from": "BRK_6_B",
+      "to": "FDR_1"
+    },
+    {
+      "from": "BUS_001",
+      "to": "ISO_A_7"
+    },
+    {
+      "from": "BRK_4_A",
+      "to": "FDR_3"
+    },
+    {
+      "from": "BRK_7_B",
+      "to": "GS_1"
+    },
+    {
+      "from": "BUS_001",
+      "to": "ISO_A_6"
+    },
+    {
+      "from": "ISO_B_6",
+      "to": "BRK_6_B"
+    },
+    {
+      "from": "BUS_001",
+      "to": "ISO_A_4"
     },
     {
       "from": "BUS_002",
       "to": "ISO_B_4"
     },
     {
-      "from": "BRK_2_A",
-      "to": "FDR_4"
-    },
-    {
-      "from": "ISO_A_4",
-      "to": "BRK_4_A"
+      "from": "ISO_A_6",
+      "to": "BRK_6_A"
     }
   ],
   "layout": {
@@ -347,11 +475,14 @@
       "FDR_2",
       "FDR_3",
       "FDR_4",
-      "TR_UP_1"
+      "GS_1",
+      "TR_UP_1",
+      "TR_UP_2"
     ],
     "exposed_terminals": {
       "upstream": [
-        "TR_UP_1"
+        "TR_UP_1",
+        "TR_UP_2"
       ],
       "downstream": []
     },

@@ -265,11 +265,11 @@ if __name__ == "__main__":
         voltage=Voltage.V220KV,
         topology_type="MESH",
         params={
-            "num_buses": 12,
-            "num_upstream_transformers": 2,
-            "num_generators": 1,
+            "num_buses": 6,
+            "num_upstream_transformers": 0,
+            "num_generators": 3,
             "num_downstream_transformers": 3,
-            "num_feeders": 4
+            "num_feeders": 3
         },
         voltage_label="220kV"
     )
@@ -278,10 +278,10 @@ if __name__ == "__main__":
         voltage=Voltage.V132KV,
         topology_type="RING_BUS",
         params={
-            "num_upstream_transformers": 2,
+            "num_upstream_transformers": 3,
             "num_generators": 0,
-            "num_downstream_transformers": 1,
-            "num_feeders": 3
+            "num_downstream_transformers": 2,
+            "num_feeders": 2
         },
         voltage_label="132kV"
     )
@@ -291,7 +291,7 @@ if __name__ == "__main__":
         topology_type="BREAKER_AND_HALF",
         params={
             "bayCount": 3,
-            "num_upstream_transformers": 1,
+            "num_upstream_transformers": 2,
             "num_generators": 0,
             "num_downstream_transformers": 1,
             "num_feeders": 2
@@ -304,8 +304,8 @@ if __name__ == "__main__":
         topology_type="MAIN_AND_TRANSFER",
         params={
             "num_upstream_transformers": 1,
-            "num_generators": 0,
-            "num_downstream_transformers": 1,
+            "num_generators": 1,
+            "num_downstream_transformers": 2,
             "num_feeders": 3
         },
         voltage_label="33kV"
@@ -316,8 +316,8 @@ if __name__ == "__main__":
         topology_type="DOUBLE_BUS",
         params={
             "breaker_per_bay": 2,
-            "num_upstream_transformers": 1,
-            "num_generators": 0,
+            "num_upstream_transformers": 2,
+            "num_generators": 1,
             "num_downstream_transformers": 0,
             "num_feeders": 4
         },
