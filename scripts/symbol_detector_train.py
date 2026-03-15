@@ -1,12 +1,18 @@
 from ultralytics import YOLO
 
 def main():
-    model = YOLO("yolov8s.pt")
+    model = YOLO("yolo26n.pt")   
 
-    model.train(data="training.yaml", epochs=100, imgsz=1024)
-
-    model = YOLO("runs/detect/train/weights/best.pt")
-    model.predict("dataset/images/val", save=True, conf=0.05)
+    model.train( 
+        data="dataset/data.yaml",
+        epochs=10,
+        imgsz=640,
+        device=0,
+        batch=-1,
+        workers=8,
+        cache=True,     
+        patience=10     
+    )
 
 if __name__ == "__main__":
     main()
