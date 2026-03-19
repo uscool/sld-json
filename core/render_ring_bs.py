@@ -624,12 +624,13 @@ def _cap(core: dict, mode: str, y_offset: float, H: float) -> dict:
 
         if mode == "hybrid" and dev_type == "Transformer":
             boundary_y = -y_offset if goes_up else -y_offset + H
-            # Draw wire from current endpoint to boundary
+            # Draw wire from current endpoint to SVG boundary edge
             _ln(svg, mid_x, wire_end_y, mid_x, boundary_y)
+            # boundary_y + y_offset = 0 (top edge) or H (bottom edge) in SVG space
             boundary_pts[et] = {
                 "label": dev_label(et),
                 "x": round(mid_x, 1),
-                "y": round(wire_end_y + y_offset, 1),
+                "y": round(boundary_y + y_offset, 1),
             }
         else:
             cls = TERM_CLASS.get(dev_type, 3)

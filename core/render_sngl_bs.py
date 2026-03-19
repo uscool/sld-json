@@ -228,21 +228,15 @@ def _render_core(topology_json: dict) -> dict:
     # so that grid sources bookend and then fill inward across the bus span.
     n_cols = max(len(infeeds), len(outfeeds), 1)
 
-    zigzag: list[int] = []
-    lo, hi = 0, n_cols - 1
-    while lo <= hi:
-        zigzag.append(lo)
-        if lo != hi:
-            zigzag.append(hi)
-        lo += 1
-        hi -= 1
-
     slots_up: list = [None] * n_cols
     slots_dn: list = [None] * n_cols
+
     for i, chain in enumerate(infeeds):
-        slots_up[zigzag[i]] = chain
+        slots_up[i] = chain
+
     for i, chain in enumerate(outfeeds):
         slots_dn[i] = chain
+
     columns: list[tuple] = list(zip(slots_up, slots_dn))
 
     # ── Horizontal geometry ────────────────────────────────────────────────────

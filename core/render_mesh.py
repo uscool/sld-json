@@ -146,7 +146,7 @@ def _render_core(topology_json: dict) -> dict:
     BUS_SPINE_W = 2.0
     NODE_R      = 0.0
     BUS_HALF_W  = 48.0    # half-width of each bus bar
-    WIRE_GAP    = 0.0     # gap between successive stack elements
+    WIRE_GAP    = 2.0     # gap between successive stack elements
     COL_OFFSET  = 22.0    # horizontal pitch between legs on the same bus
     LEG_REACH   = 75      # Max reach of a bay
     FONT_W      = 0.0     # px per char at font-size 7 monospace

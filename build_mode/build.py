@@ -16,7 +16,7 @@ from core.render_sngl_bs import render_single_bus_svg
 
 def main():
 
-    TOPOLOGY = "MAIN_AND_TRANSFER"
+    TOPOLOGY = "SINGLE_BUS"
     
     BASE = os.path.dirname(__file__)
     JSON_PATH = os.path.join(BASE, "json", f"{TOPOLOGY.lower()}.json")
@@ -43,10 +43,10 @@ def main():
         t.double_bus(
             voltage_level=voltage,
             breaker_per_bay=1,
-            num_upstream_transformers=2,
-            num_generators=0,
+            num_upstream_transformers=4,
+            num_generators=1,
             num_downstream_transformers=1,
-            num_feeders=1,
+            num_feeders=5,
             filepath=JSON_PATH,
         )
 

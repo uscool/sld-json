@@ -119,12 +119,12 @@ def _render_core(topology_json: dict) -> dict:
     BUS_SPINE_W        = 2.0
     JOIN               = 0.0
     FEEDER_LEFT        = 20.0    # horizontal clearance outside bus for UP wires
-    FEEDER_BEYOND      = 40.0    # vertical stub length past bus for feeders
-    TRANSFORMER_BEYOND = 40.0    # vertical stub length past bus for transformers
-    UPSTREAM_BUS_GAP   = 0.0     # gap between top bus and upstream symbol bottom
+    FEEDER_BEYOND      = 20.0    # vertical stub length past bus for feeders
+    TRANSFORMER_BEYOND = 20.0    # vertical stub length past bus for transformers
+    UPSTREAM_BUS_GAP   = -15.0     # gap between top bus and upstream symbol bottom
     NODE_R             = 0.0
     DOWN_STAGGER       = 20.0    # horizontal separation between DOWN wires in same bay
-    DOWN_V_STAGGER     = 30.0    # vertical stagger between DOWN symbols in same bay
+    DOWN_V_STAGGER     = 20.0    # vertical stagger between DOWN symbols in same bay
 
     # ── Parse ────────────────────────────────────────────────────────────────
     devices = {d["id"]: d for d in topology_json["devices"]}

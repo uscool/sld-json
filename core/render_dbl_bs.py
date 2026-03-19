@@ -212,18 +212,14 @@ def _render_core(topology_json: dict) -> dict:
     up_bays   = [b for b in bay_ids if bay_info[b]["goes_up"]]
     down_bays = [b for b in bay_ids if not bay_info[b]["goes_up"]]
 
-    n_cols  = len(down_bays)
     columns = []
-    for i, dn in enumerate(down_bays):
-        if i == 0:
-            up = up_bays[0] if up_bays else None
-        elif i == n_cols - 1:
-            up = up_bays[1] if len(up_bays) > 1 else None
-        else:
-            up = None
+
+    max_len = max(len(up_bays), len(down_bays))
+
+    for i in range(max_len):
+        up = up_bays[i] if i < len(up_bays) else None
+        dn = down_bays[i] if i < len(down_bays) else None
         columns.append((up, dn))
-    for up in up_bays[2:]:
-        columns.append((up, None))
 
     n_cols_actual = len(columns)
 
@@ -526,6 +522,7 @@ def _cap(core: dict, mode: str, y_offset: float, H: float) -> dict:
     SYM       = core["SYM"]
     FONT_W    = core["FONT_W"]
     MARGIN_Y  = core["MARGIN_Y"]
+    CANVAS_X1 = core["CANVAS_X1"]
     end_pts   = core["end_pts"]
     dev_label = core["dev_label"]
     LBL_X_PAD = core["LBL_X_PAD"]
@@ -551,8 +548,8 @@ def _cap(core: dict, mode: str, y_offset: float, H: float) -> dict:
             _ln(svg, mid_x, wire_end_y, mid_x, boundary_y)
             boundary_pts[et] = {
                 "label": dev_label(et),
-                "x": round(mid_x, 1),
-                "y": round(boundary_y + y_offset, 1),
+                "x": round(mid_x - CANVAS_X1, 1),   # apply canvas x-translation
+                "y": round(boundary_y + y_offset, 1), # 0 (top edge) or H (bottom edge)
             }
         else:
             cls = TERM_CLASS.get(dev_type, 3)

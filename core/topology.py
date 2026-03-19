@@ -198,20 +198,8 @@ def double_bus(
     total_out = num_downstream_transformers + num_feeders
     total_bays = total_in + total_out
 
-    # ---------------- INCOMING BAY ORDER ----------------
-    incoming_total = total_in
-
-    left = 1
-    right = total_bays
-    incoming_positions = []
-
-    while len(incoming_positions) < incoming_total and left <= right:
-        incoming_positions.append(left)
-        if len(incoming_positions) >= incoming_total:
-            break
-        incoming_positions.append(right)
-        left += 1
-        right -= 1
+    # ---------------- INCOMING BAY ORDER (LEFT → RIGHT) ----------------
+    incoming_positions = list(range(1, total_in + 1))
 
     upstream_remaining = num_upstream_transformers
     generator_remaining = num_generators
@@ -600,25 +588,11 @@ def mesh(
     # ---------------- ROW CLASSIFICATION ----------------
     top_row_buses = buses[0:cols]
     bottom_row_buses = buses[(rows-1)*cols : rows*cols]
-
-    def alternating_lr_order(row):
-        order = []
-        l, r = 0, len(row) - 1
-
-        while l <= r:
-            if l == r:
-                order.append(row[l])
-            else:
-                order.append(row[l])
-                order.append(row[r])
-            l += 1
-            r -= 1
-
-        return order
-
-    infeed_attach_points = alternating_lr_order(top_row_buses)
+    
+    # ---------------- ATTACH ORDER (LEFT → RIGHT) ----------------
+    infeed_attach_points = list(top_row_buses)
     outfeed_attach_points = list(bottom_row_buses)
-
+    
     # ---------------- INFEEDS ----------------
     uid = 1
     aidx_in = 0
@@ -855,16 +829,10 @@ def ring_bus(
 
         bay_counter += 1
 
-    # -------- INFEEDS --------
+    # -------- INFEEDS (LEFT → RIGHT, TR FIRST) --------
     idx = 0
 
-    for i in range(num_generators):
-        d = Device(f"GS_{i+1}", DeviceType.GRID_SOURCE, voltage_level, None, None)
-        devices.add(d)
-        terminals.add(d.device_id)
-        attach_device(d, top_buses[idx])
-        idx += 1
-
+    # transformers first
     for i in range(num_upstream_transformers):
         d = Device(f"TR_UP_{i+1}", DeviceType.TRANSFORMER, voltage_level, None, None)
         devices.add(d)
@@ -873,22 +841,32 @@ def ring_bus(
         terminals.add(d.device_id)
         idx += 1
 
+    # then generators
+    for i in range(num_generators):
+        d = Device(f"GS_{i+1}", DeviceType.GRID_SOURCE, voltage_level, None, None)
+        devices.add(d)
+        terminals.add(d.device_id)
+        attach_device(d, top_buses[idx])
+        idx += 1
+
     # -------- OUTFEEDS --------
     idx = 0
 
+    # feeders first
+    for i in range(num_feeders):
+        d = Device(f"FDR_{i+1}", DeviceType.FEEDER, voltage_level, None, None)
+        devices.add(d)
+        terminals.add(d.device_id)
+        attach_device(d, bottom_buses[idx])
+        idx += 1
+
+    # then transformers
     for i in range(num_downstream_transformers):
         d = Device(f"TR_DN_{i+1}", DeviceType.TRANSFORMER, voltage_level, None, None)
         devices.add(d)
         attach_device(d, bottom_buses[idx])
         exposed_terminals["downstream"].append(d.device_id)
         terminals.add(d.device_id)
-        idx += 1
-
-    for i in range(num_feeders):
-        d = Device(f"FDR_{i+1}", DeviceType.FEEDER, voltage_level, None, None)
-        devices.add(d)
-        terminals.add(d.device_id)
-        attach_device(d, bottom_buses[idx])
         idx += 1
 
     # -------- GEOMETRY METADATA --------
@@ -916,7 +894,6 @@ def single_bus(
     num_feeders=0,
     filepath=None
 ):
-    from core.grammar import Device, DeviceType, BusRole
 
     devices = set()
     edges = set()

@@ -39,11 +39,24 @@ from core.render_sngl_bs import render_single_bus_svg
 
 CANVAS_MARGIN_X = 10              # Left/right margin
 CANVAS_MARGIN_Y = 10             # Top/bottom margin
-TRANSFORMER_SPACE_ABOVE = 0     # Vertical space from bottom of upper level to top of transformer symbol
-TRANSFORMER_SPACE_BELOW = 0     # Vertical space from bottom of transformer symbol to top of lower level
+TRANSFORMER_SPACE_ABOVE = 4    # Vertical space from bottom of upper level to top of transformer symbol
+TRANSFORMER_SPACE_BELOW = 4    # Vertical space from bottom of transformer symbol to top of lower level
 TRANSFORMER_SIZE = 32             # 32x32 viewBox
 LINE_WIDTH = 1                    # Connection line width
 LINE_COLOR = "#000"               # Black
+
+# Transformer label
+TR_LABEL_OFFSET_X  = -6           # Horizontal gap: symbol right edge → label start (px)
+TR_LABEL_OFFSET_Y  = 0.6         # Vertical position as fraction of symbol height (0=top, 1=bottom)
+TR_LABEL_FONT_SIZE = 7           # Label font size (px)
+TR_LABEL_FONT_W    = 4.2         # Estimated px per character at TR_LABEL_FONT_SIZE (monospace)
+
+# Transformer separation
+TR_MIN_SEPARATION  = 150           # Extra minimum pixel gap between adjacent transformer centres.
+                                 # Even at 0 the label-clearance rule always applies:
+                                 # each pair is spaced at least
+                                 # TRANSFORMER_SIZE + TR_LABEL_OFFSET_X + len(label)*TR_LABEL_FONT_W
+                                 # so the left label never overlaps the right symbol.
 
 # IEC Transformer Symbol
 IEC_TRANSFORMER_SYMBOL = (
@@ -128,20 +141,25 @@ def extract_svg_inner_content(svg_content: str) -> str:
 
 
 def manhattan_path(from_point: Tuple[float, float], to_point: Tuple[float, float]) -> str:
-    """Generate Manhattan routing path"""
+    """
+    Generate Manhattan (elbow) routing path: vertical → horizontal → vertical.
+    The horizontal crossover is placed at 1/3 of the vertical span below from_point,
+    guaranteeing a visible elbow even when the gap is small.
+    """
     x1, y1 = from_point
     x2, y2 = to_point
-    mid_y = (y1 + y2) / 2
-    return f"M {x1:.1f},{y1:.1f} L {x1:.1f},{mid_y:.1f} L {x2:.1f},{mid_y:.1f} L {x2:.1f},{y2:.1f}"
+    span = abs(y2 - y1)
+    # Place the horizontal segment closer to the start so the elbow is always visible
+    elbow_y = y1 + max(span / 3, 4) if y2 >= y1 else y1 - max(span / 3, 4)
+    return f"M {x1:.1f},{y1:.1f} L {x1:.1f},{elbow_y:.1f} L {x2:.1f},{elbow_y:.1f} L {x2:.1f},{y2:.1f}"
 
 
 def generate_transformer_symbol(x: float, y: float, label: str) -> str:
     """Generate IEC transformer symbol SVG with label to the right (matching render_brk_hlf style)"""
     transform_x = x - TRANSFORMER_SIZE / 2
     transform_y = y - TRANSFORMER_SIZE / 2
-    # Label positioned to the right of the symbol at 60% of symbol height, monospace size 7
-    label_x = x + TRANSFORMER_SIZE / 2 + 2
-    label_y = transform_y + TRANSFORMER_SIZE * 0.6
+    label_x = x + TRANSFORMER_SIZE / 2 + TR_LABEL_OFFSET_X
+    label_y = transform_y + TRANSFORMER_SIZE * TR_LABEL_OFFSET_Y
 
     return (
         f'\n    <g id="transformer_{label.replace("/", "_").replace("-", "_")}"'
@@ -151,8 +169,32 @@ def generate_transformer_symbol(x: float, y: float, label: str) -> str:
         f'        </g>\n'
         f'    </g>\n'
         f'    <text x="{label_x:.1f}" y="{label_y:.1f}" text-anchor="start"'
-        f' font-size="7" font-family="monospace" fill="{LINE_COLOR}">{label}</text>\n'
+        f' font-size="{TR_LABEL_FONT_SIZE}" font-family="monospace" fill="{LINE_COLOR}">{label}</text>\n'
     )
+
+
+def _enforce_transformer_separation(
+    centers: List[float], labels: List[str]
+) -> List[float]:
+    """
+    Shift transformer centres rightward so each adjacent pair satisfies both
+    TR_MIN_SEPARATION and the label-clearance rule:
+        gap >= TRANSFORMER_SIZE + TR_LABEL_OFFSET_X + len(left_label) * TR_LABEL_FONT_W
+    This guarantees the left transformer's label never overlaps the right symbol.
+    centres and labels must already be in left-to-right order.
+    """
+    if len(centers) <= 1:
+        return list(centers)
+    result = list(centers)
+    for i in range(1, len(result)):
+        label_px = len(labels[i - 1]) * TR_LABEL_FONT_W
+        needed = max(
+            TR_MIN_SEPARATION,
+            TRANSFORMER_SIZE + TR_LABEL_OFFSET_X + label_px,
+        )
+        if result[i] - result[i - 1] < needed:
+            result[i] = result[i - 1] + needed
+    return result
 
 
 # ============================================================================
@@ -265,71 +307,103 @@ class HybridSVGRenderer:
         self.canvas_height = current_y - inter_level_gap + CANVAS_MARGIN_Y
     
     def _place_transformers(self):
-        """Place transformers between levels"""
+        """
+        Place transformers between levels, re-pairing by x-position so wires never cross.
+
+        The JSON builder pairs transformers by list index, which does not guarantee
+        that the left-to-right order of downstream terminals on the upper level matches
+        the left-to-right order of upstream terminals on the lower level.  When they
+        are out of order the connecting wires cross.
+
+        Fix: for every (from_level, to_level) pair, resolve all from/to canvas
+        coordinates first, sort each side independently by x, then zip them in
+        sorted order so the leftmost upper terminal always connects to the leftmost
+        lower terminal.
+        """
         print(f"Placing transformers...")
-        
+
         unified_transformers = self.merged_json.get("unified_transformers", {})
         transformer_connections = self.merged_json.get("transformer_connections", {})
-        
+
+        # Group transformer metadata by (from_level_idx, to_level_idx)
+        from collections import defaultdict
+        level_pair_groups: dict = defaultdict(list)
+
         for tr_id, levels in transformer_connections.items():
             if len(levels) != 2:
                 continue
-            
+
             from_level_idx, to_level_idx = levels
             tr_data = unified_transformers[tr_id]
-            
-            # Get original device IDs
+
             from_device_id = tr_data["from_device_id"]
-            to_device_id = tr_data["to_device_id"]
-            
-            # Extract original IDs (without voltage prefix)
+            to_device_id   = tr_data["to_device_id"]
+
+            # Strip voltage prefix to get the key used in boundary_pts
             from_original = from_device_id.split('_', 1)[1] if '_' in from_device_id else from_device_id
-            to_original = to_device_id.split('_', 1)[1] if '_' in to_device_id else to_device_id
-            
-            # Get boundary points from renderers
+            to_original   = to_device_id.split('_', 1)[1]   if '_' in to_device_id   else to_device_id
+
             from_result = self.level_results[from_level_idx]
-            to_result = self.level_results[to_level_idx]
-            
+            to_result   = self.level_results[to_level_idx]
+
             from_pt_data = from_result.boundary_pts.get(from_original, {})
-            to_pt_data = to_result.boundary_pts.get(to_original, {})
-            
+            to_pt_data   = to_result.boundary_pts.get(to_original, {})
+
             if not from_pt_data or not to_pt_data:
                 continue
-            
-            # Calculate absolute canvas positions
+
             from_offset = self.level_positions[from_level_idx]
-            to_offset = self.level_positions[to_level_idx]
-            
+            to_offset   = self.level_positions[to_level_idx]
+
             from_point = (
                 from_pt_data["x"] + from_offset[0],
-                from_pt_data["y"] + from_offset[1]
+                from_pt_data["y"] + from_offset[1],
             )
-            
             to_point = (
                 to_pt_data["x"] + to_offset[0],
-                to_pt_data["y"] + to_offset[1]
+                to_pt_data["y"] + to_offset[1],
             )
-            
-            # Calculate center:
-            # x is the midpoint of the two connection x-coords.
-            # y is derived from layout: bottom of upper level + TRANSFORMER_SPACE_ABOVE + half symbol.
+
+            level_pair_groups[(from_level_idx, to_level_idx)].append({
+                "tr_id":      tr_id,
+                "label":      tr_data["label"],
+                "from_point": from_point,
+                "to_point":   to_point,
+            })
+
+        # For each level pair, sort both sides by x then re-zip to eliminate crossings
+        for (from_level_idx, to_level_idx), group in level_pair_groups.items():
             upper_level_bottom = (
                 self.level_positions[from_level_idx][1]
                 + self.level_results[from_level_idx].height
             )
-            center = (
-                (from_point[0] + to_point[0]) / 2,
-                upper_level_bottom + TRANSFORMER_SPACE_ABOVE + TRANSFORMER_SIZE / 2,
+            tr_center_y = upper_level_bottom + TRANSFORMER_SPACE_ABOVE + TRANSFORMER_SIZE / 2
+
+            # Sort from-points and to-points independently by x
+            from_side = sorted(
+                [(entry["from_point"], entry["tr_id"], entry["label"]) for entry in group],
+                key=lambda t: t[0][0]
             )
-            
-            self.transformers.append(TransformerPlacement(
-                id=tr_id,
-                label=tr_data["label"],
-                center=center,
-                from_point=from_point,
-                to_point=to_point
-            ))
-        
+            to_side = sorted(
+                [entry["to_point"] for entry in group],
+                key=lambda pt: pt[0]
+            )
+
+            # Compute natural centre x values, then enforce minimum separation
+            natural_cx = [(fp[0] + tp[0]) / 2 for (fp, _, _), tp in zip(from_side, to_side)]
+            labels_lr  = [lbl for (_, _, lbl) in from_side]
+            adjusted_cx = _enforce_transformer_separation(natural_cx, labels_lr)
+
+            for ((from_point, tr_id, label), to_point, cx) in zip(from_side, to_side, adjusted_cx):
+                center = (cx, tr_center_y)
+                self.transformers.append(TransformerPlacement(
+                    id=tr_id,
+                    label=label,
+                    center=center,
+                    from_point=from_point,
+                    to_point=to_point,
+                ))
+
         print(f"  ✓ Placed {len(self.transformers)} transformers")
     
     def _generate_svg(self, output_path: str):
