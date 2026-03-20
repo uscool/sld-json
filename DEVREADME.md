@@ -22,12 +22,9 @@ The main orchestrator. Calls `main_standalone.py` and `main_hybrid.py` with the 
 
 ---
 
-### Commands
-
----
-
-```python diagram_service.py```
-
+```bash
+python diagram_service.py
+```
 Runs both generators with their built-in default counts.
 
 - **Standalone** — 50 samples per topology × 6 topologies = **300 diagrams** → `output_standalone/`
@@ -36,8 +33,9 @@ Runs both generators with their built-in default counts.
 
 ---
 
-```python diagram_service.py --bulk-count 500```
-
+```bash
+python diagram_service.py --bulk-count 500
+```
 Splits 500 evenly — 250 to standalone, 250 to hybrid.
 
 - **Standalone** — 250 ÷ 6 = 41 samples per topology = **246 diagrams** → `output_standalone/`
@@ -46,8 +44,9 @@ Splits 500 evenly — 250 to standalone, 250 to hybrid.
 
 ---
 
-```python diagram_service.py --standalone-samples 100 --hybrid-samples 200```
-
+```bash
+python diagram_service.py --standalone-samples 100 --hybrid-samples 200
+```
 Explicit control over both counts independently. Does not do any splitting — you specify each directly.
 
 - **Standalone** — 100 samples per topology × 6 topologies = **600 diagrams** → `output_standalone/`
@@ -56,8 +55,9 @@ Explicit control over both counts independently. Does not do any splitting — y
 
 ---
 
-```python diagram_service.py --standalone-only```
-
+```bash
+python diagram_service.py --standalone-only
+```
 Runs only the standalone generator with default counts (50 per topology).
 
 - **Standalone** — 50 × 6 = **300 diagrams** → `output_standalone/`
@@ -65,8 +65,9 @@ Runs only the standalone generator with default counts (50 per topology).
 
 ---
 
-```python diagram_service.py --hybrid-only```
-
+```bash
+python diagram_service.py --hybrid-only
+```
 Runs only the hybrid generator with default counts.
 
 - **Hybrid** — **100 diagrams** → `output_hybrid/`
@@ -74,12 +75,15 @@ Runs only the hybrid generator with default counts.
 
 ---
 
-```python diagram_service.py --standalone-dir data/standalone --hybrid-dir data/hybrid```
-
+```bash
+python diagram_service.py --standalone-dir data/standalone --hybrid-dir data/hybrid
+```
 Same as the default run but outputs go to custom directories instead.
 
 - **Standalone** — 50 × 6 = **300 diagrams** → `data/standalone/`
 - **Hybrid** — **100 diagrams** → `data/hybrid/`
+
+---
 
 You can combine this with any other flag, e.g.:
 ```bash
