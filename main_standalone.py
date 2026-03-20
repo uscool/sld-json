@@ -23,7 +23,7 @@ except ImportError:
 # ─────────────────────────────────────────────
 
 TRAIN_DIR   = "output_standalone"
-NUM_SAMPLES = 10
+NUM_SAMPLES = 50
 
 # Fixed voltage — visual variety comes from topology structure, not voltage label
 VOLTAGE = Voltage.V220KV
@@ -56,91 +56,101 @@ RENDER_MAP = {
 # Per-topology random parameter generators
 # ─────────────────────────────────────────────
 
-def _rand_incomers():
-    """Return (upstream_tx, generators) with sum <= 2, at least one incomer."""
-    combos = [(1, 0), (2, 0), (1, 1), (0, 1), (0, 2)]
-    return random.choice(combos)
-
-
 def rand_params_single_bus():
-    # No constraints
+    up_tr   = random.randint(0, 6)
+    gens    = random.randint(0, 6)
+    dn_tr   = random.randint(0, 6)
+    feeders = random.randint(0, 10)
     return dict(
-        num_upstream_transformers   = random.randint(1, 4),
-        num_generators              = random.randint(0, 3),
-        num_downstream_transformers = random.randint(1, 4),
-        num_feeders                 = random.randint(2, 10),
+        num_upstream_transformers   = up_tr,
+        num_generators              = gens,
+        num_downstream_transformers = dn_tr,
+        num_feeders                 = feeders,
     )
 
 
 def rand_params_double_bus():
-    # breaker_per_bay must be 1 or 2
+    up_tr   = random.randint(0, 6)
+    gens    = random.randint(0, 6)
+    dn_tr   = random.randint(0, 6)
+    feeders = random.randint(0, 10)
     return dict(
         breaker_per_bay             = random.choice([1, 2]),
-        num_upstream_transformers   = random.randint(1, 4),
-        num_generators              = random.randint(0, 3),
-        num_downstream_transformers = random.randint(1, 4),
-        num_feeders                 = random.randint(1, 8),
+        num_upstream_transformers   = up_tr,
+        num_generators              = gens,
+        num_downstream_transformers = dn_tr,
+        num_feeders                 = feeders,
     )
 
 
 def rand_params_breaker_and_half():
-    # num_upstream_transformers + num_generators <= 2
-    upstream, gens = _rand_incomers()
+    # Hard incomer cap: up_tr + gens <= 2
+    up_tr = random.randint(0, 2)
+    gens  = random.randint(0, 2 - up_tr)
+    infeeds = up_tr + gens
+
+    # bayCount: min 3, must satisfy 2*bayCount - infeeds >= dn_tr
+    bayCount = random.randint(3, 6)
+    max_out  = 2 * bayCount - infeeds
+
+    dn_tr   = random.randint(0, min(6, bayCount, max(0, max_out)))
+    spare   = max_out - dn_tr
+    feeders = random.randint(0, min(10, max(0, spare)))
     return dict(
-        bayCount                    = random.randint(2, 6),
-        num_upstream_transformers   = upstream,
+        bayCount                    = bayCount,
+        num_upstream_transformers   = up_tr,
         num_generators              = gens,
-        num_downstream_transformers = random.randint(1, 4),
-        num_feeders                 = random.randint(2, 8),
+        num_downstream_transformers = dn_tr,
+        num_feeders                 = feeders,
     )
 
 
 def rand_params_main_and_transfer():
-    # num_upstream_transformers + num_generators <= 2
-    upstream, gens = _rand_incomers()
+    # Exactly 2 incomers: up_tr + gens == 2
+    up_tr = random.randint(0, 2)
+    gens  = 2 - up_tr
+    dn_tr   = random.randint(0, 6)
+    feeders = random.randint(0, 10)
     return dict(
-        num_upstream_transformers   = upstream,
+        num_upstream_transformers   = up_tr,
         num_generators              = gens,
-        num_downstream_transformers = random.randint(1, 4),
-        num_feeders                 = random.randint(2, 10),
+        num_downstream_transformers = dn_tr,
+        num_feeders                 = feeders,
     )
 
 
 def rand_params_ring_bus():
-    # total connections >= 3; guaranteed here since upstream >= 1,
-    # downstream >= 1, feeders >= 1, so min total = 3.
+    # total circuits >= 3
+    up_tr   = random.randint(0, 6)
+    gens    = random.randint(0, 6)
+    dn_tr   = random.randint(0, 6)
+    feeders = random.randint(0, 10)
+    infeeds  = up_tr + gens
+    outfeeds = dn_tr + feeders
+    # Bump feeders if total < 3
+    if infeeds + outfeeds < 3:
+        feeders += 3 - (infeeds + outfeeds)
     return dict(
-        num_upstream_transformers   = random.randint(1, 4),
-        num_generators              = random.randint(0, 3),
-        num_downstream_transformers = random.randint(1, 4),
-        num_feeders                 = random.randint(1, 5),
+        num_upstream_transformers   = up_tr,
+        num_generators              = gens,
+        num_downstream_transformers = dn_tr,
+        num_feeders                 = feeders,
     )
 
 
 def rand_params_mesh():
-    # num_buses in MESH_BUS_COUNTS
-    # infeeds  (upstream + generators)  <= max_infeeds for that bus count
-    # outfeeds (downstream + feeders)   <= max_outfeeds for that bus count
-    num_buses = random.choice(MESH_BUS_COUNTS)
-    max_in, max_out = MESH_LIMITS[num_buses]
+    num_buses        = random.choice(MESH_BUS_COUNTS)
+    max_in, max_out  = MESH_LIMITS[num_buses]
 
-    # --- infeeds ---
-    max_upstream = min(3, max_in - 0)           # leave room for at least 0 generators
-    upstream     = random.randint(1, max_upstream)
-    max_gens     = min(2, max_in - upstream)
-    gens         = random.randint(0, max_gens)
-
-    # --- outfeeds ---
-    max_downstream = min(3, max_out - 1)        # leave room for at least 1 feeder
-    downstream     = random.randint(1, max_downstream)
-    max_feeders    = min(4, max_out - downstream)
-    feeders        = random.randint(1, max(1, max_feeders))
-
+    up_tr   = random.randint(0, min(6, max_in))
+    gens    = random.randint(0, min(6, max_in - up_tr))
+    dn_tr   = random.randint(0, min(6, max_out))
+    feeders = random.randint(0, min(10, max_out - dn_tr))
     return dict(
         num_buses                   = num_buses,
-        num_upstream_transformers   = upstream,
+        num_upstream_transformers   = up_tr,
         num_generators              = gens,
-        num_downstream_transformers = downstream,
+        num_downstream_transformers = dn_tr,
         num_feeders                 = feeders,
     )
 
