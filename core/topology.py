@@ -24,7 +24,7 @@ import json
 import random
 from collections import defaultdict
 
-from core.grammar import Device, DeviceType, BusRole
+from .grammar import Device, DeviceType, BusRole
 
 
 # ---------------------------------------------------------------------------

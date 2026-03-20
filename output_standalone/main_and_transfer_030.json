@@ -1,0 +1,146 @@
+{
+  "devices": [
+    {
+      "id": "BRK_BUS_COUPLER",
+      "label": "220kV_00_CB1",
+      "type": "Breaker",
+      "voltage": "220kV",
+      "bus_role": null,
+      "bay_id": "BAY_COUPLER"
+    },
+    {
+      "id": "BRK_IN_1",
+      "label": "220kV_01_CB1",
+      "type": "Breaker",
+      "voltage": "220kV",
+      "bus_role": null,
+      "bay_id": "BAY_1"
+    },
+    {
+      "id": "BRK_IN_2",
+      "label": "220kV_02_CB1",
+      "type": "Breaker",
+      "voltage": "220kV",
+      "bus_role": null,
+      "bay_id": "BAY_2"
+    },
+    {
+      "id": "BUS_MAIN",
+      "label": "220kV_BUS_A",
+      "type": "Bus",
+      "voltage": "220kV",
+      "bus_role": "MAIN",
+      "bay_id": null
+    },
+    {
+      "id": "BUS_TRANSFER",
+      "label": "220kV_BUS_B",
+      "type": "Bus",
+      "voltage": "220kV",
+      "bus_role": "TRANSFER",
+      "bay_id": null
+    },
+    {
+      "id": "GS_1",
+      "label": "220kV-GEN-01",
+      "type": "GridSource",
+      "voltage": "220kV",
+      "bus_role": null,
+      "bay_id": null
+    },
+    {
+      "id": "GS_2",
+      "label": "220kV-GEN-02",
+      "type": "GridSource",
+      "voltage": "220kV",
+      "bus_role": null,
+      "bay_id": null
+    },
+    {
+      "id": "ISO_IN_1_A",
+      "label": "220kV_01_DSA",
+      "type": "Isolator",
+      "voltage": "220kV",
+      "bus_role": null,
+      "bay_id": "BAY_1"
+    },
+    {
+      "id": "ISO_IN_1_B",
+      "label": "220kV_01_DSB",
+      "type": "Isolator",
+      "voltage": "220kV",
+      "bus_role": null,
+      "bay_id": "BAY_1"
+    },
+    {
+      "id": "ISO_IN_2_A",
+      "label": "220kV_02_DSA",
+      "type": "Isolator",
+      "voltage": "220kV",
+      "bus_role": null,
+      "bay_id": "BAY_2"
+    },
+    {
+      "id": "ISO_IN_2_B",
+      "label": "220kV_02_DSB",
+      "type": "Isolator",
+      "voltage": "220kV",
+      "bus_role": null,
+      "bay_id": "BAY_2"
+    }
+  ],
+  "connections": [
+    {
+      "from": "BUS_MAIN",
+      "to": "BRK_BUS_COUPLER"
+    },
+    {
+      "from": "ISO_IN_2_B",
+      "to": "BUS_TRANSFER"
+    },
+    {
+      "from": "ISO_IN_2_A",
+      "to": "BRK_IN_2"
+    },
+    {
+      "from": "ISO_IN_1_A",
+      "to": "BRK_IN_1"
+    },
+    {
+      "from": "GS_1",
+      "to": "ISO_IN_1_A"
+    },
+    {
+      "from": "BRK_IN_1",
+      "to": "ISO_IN_1_B"
+    },
+    {
+      "from": "GS_2",
+      "to": "ISO_IN_2_A"
+    },
+    {
+      "from": "BRK_IN_2",
+      "to": "ISO_IN_2_B"
+    },
+    {
+      "from": "BRK_BUS_COUPLER",
+      "to": "BUS_TRANSFER"
+    },
+    {
+      "from": "ISO_IN_1_B",
+      "to": "BUS_MAIN"
+    }
+  ],
+  "layout": {
+    "topology_mode": "STANDARD",
+    "topology_type": "MAIN_AND_TRANSFER",
+    "terminals": [
+      "GS_1",
+      "GS_2"
+    ],
+    "exposed_terminals": {
+      "upstream": [],
+      "downstream": []
+    }
+  }
+}

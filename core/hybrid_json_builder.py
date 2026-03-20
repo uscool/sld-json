@@ -12,8 +12,8 @@ Usage:
     merged_json_path = builder.generate("output/merged.json")
 """
 
-import core.topology as t
-from core.grammar import Voltage
+from . import topology as t
+from .grammar import Voltage
 import json
 import os
 from typing import Dict, List, Any

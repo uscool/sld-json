@@ -15,8 +15,126 @@
 - Add as you go
 ```
 
-## File info
+# File info
+## diagram_service.py
+# File info
 
+## diagram_service.py
+
+The main orchestrator. Calls `main_standalone.py` and `main_hybrid.py` with the right arguments depending on how you invoke it. Outputs go into two separate folders — one for standalone diagrams, one for hybrid.
+
+---
+
+### Commands
+
+---
+
+#### `python diagram_service.py`
+
+Runs both generators with their built-in default counts.
+
+- **Standalone** — 50 samples per topology × 6 topologies = **300 diagrams** → `output_standalone/`
+- **Hybrid** — **100 diagrams** → `output_hybrid/`
+- **Total: 400 diagrams**
+
+---
+
+#### `python diagram_service.py --bulk-count 500`
+
+Splits 500 evenly — 250 to standalone, 250 to hybrid.
+
+- **Standalone** — 250 ÷ 6 = 41 samples per topology = **246 diagrams** → `output_standalone/`
+- **Hybrid** — **250 diagrams** → `output_hybrid/`
+- **Total: 496 diagrams** (remainder from the 250 ÷ 6 division is dropped)
+
+---
+
+#### `python diagram_service.py --standalone-samples 100 --hybrid-samples 200`
+
+Explicit control over both counts independently. Does not do any splitting — you specify each directly.
+
+- **Standalone** — 100 samples per topology × 6 topologies = **600 diagrams** → `output_standalone/`
+- **Hybrid** — **200 diagrams** → `output_hybrid/`
+- **Total: 800 diagrams**
+
+---
+
+#### `python diagram_service.py --standalone-only`
+
+Runs only the standalone generator with default counts (50 per topology).
+
+- **Standalone** — 50 × 6 = **300 diagrams** → `output_standalone/`
+- Hybrid is skipped entirely.
+
+---
+
+#### `python diagram_service.py --hybrid-only`
+
+Runs only the hybrid generator with default counts.
+
+- **Hybrid** — **100 diagrams** → `output_hybrid/`
+- Standalone is skipped entirely.
+
+---
+
+#### `python diagram_service.py --standalone-dir data/standalone --hybrid-dir data/hybrid`
+
+Same as the default run but outputs go to custom directories instead.
+
+- **Standalone** — 50 × 6 = **300 diagrams** → `data/standalone/`
+- **Hybrid** — **100 diagrams** → `data/hybrid/`
+
+You can combine this with any other flag, e.g.:
+```bash
+python diagram_service.py --bulk-count 500 --standalone-dir data/standalone --hybrid-dir data/hybrid
+```
+
+---
+
+### Output folder structure
+
+#### `output_standalone/`
+Flat folder. One set of files per diagram, named by topology and index.
+```
+output_standalone/
+    single_bus_000.json
+    single_bus_000.svg
+    single_bus_000.png
+    single_bus_001.json
+    ...
+    double_bus_000.json
+    ...
+    breaker_and_half_000.json
+    ...
+    main_and_transfer_000.json
+    ...
+    ring_bus_000.json
+    ...
+    mesh_000.json
+    ...
+    mesh_049.json
+    mesh_049.svg
+    mesh_049.png
+```
+
+#### `output_hybrid/`
+Flat folder. One set of files per diagram, named by index. Each diagram is a multi-voltage-level stack so it also gets a YOLO annotations file.
+```
+output_hybrid/
+    hybrid_0000.json    ← merged topology JSON (all levels combined)
+    hybrid_0000.svg
+    hybrid_0000.png
+    hybrid_0000.txt     ← YOLO bounding box annotations
+    hybrid_0001.json
+    ...
+    hybrid_0099.json
+    hybrid_0099.svg
+    hybrid_0099.png
+    hybrid_0099.txt
+```
+
+> Temporary folders named `_temp_hybrid_XXXX/` are created during hybrid generation but are deleted automatically once each diagram finishes.
+# Other Files
 *Note: Please keep updating as and when you add files. Update status as well. Those never meant to be part of structure due to being plain wrong, mark as gray.*
 
 1. components.py: Creates components to use to generate diagrams. Yours truly.

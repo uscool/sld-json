@@ -25,12 +25,12 @@ from typing import Dict, List, Tuple
 from dataclasses import dataclass
 
 # Import all renderers
-from core.render_brk_hlf import render_breaker_and_half_svg
-from core.render_dbl_bs import render_double_bus_svg
-from core.render_mn_trfr import render_main_and_transfer_svg
-from core.render_mesh import render_mesh_svg
-from core.render_ring_bs import render_ring_bus_svg
-from core.render_sngl_bs import render_single_bus_svg
+from .render_brk_hlf import render_breaker_and_half_svg
+from .render_dbl_bs import render_double_bus_svg
+from .render_mn_trfr import render_main_and_transfer_svg
+from .render_mesh import render_mesh_svg
+from .render_ring_bs import render_ring_bus_svg
+from .render_sngl_bs import render_single_bus_svg
 
 
 # ============================================================================
