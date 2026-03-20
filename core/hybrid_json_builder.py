@@ -80,16 +80,16 @@ class HybridJSONBuilder:
         os.makedirs(temp_dir, exist_ok=True)
         os.makedirs(os.path.dirname(output_path), exist_ok=True)
         
-        print(f"\n{'='*70}")
-        print(f"HYBRID JSON BUILDER")
-        print(f"{'='*70}")
-        print(f"Generating {len(self.levels)} voltage levels...")
+        # print(f"\n{'='*70}")
+        # print(f"HYBRID JSON BUILDER")
+        # print(f"{'='*70}")
+        # print(f"Generating {len(self.levels)} voltage levels...")
         
         # Step 1: Generate individual JSONs
         for i, level in enumerate(self.levels):
             json_path = f"{temp_dir}/{level.voltage_label}_{i}.json"
             
-            print(f"  - Level {i}: {level.voltage_label} ({level.topology_type})")
+            # print(f"  - Level {i}: {level.voltage_label} ({level.topology_type})")
             
             # Call topology generator
             topology_func = self.TOPOLOGY_FUNCTIONS[level.topology_type]
@@ -106,16 +106,16 @@ class HybridJSONBuilder:
                 self.level_jsons.append(json.load(f))
         
         # Step 2: Merge JSONs
-        print(f"\nMerging JSONs with unified transformers...")
+        # print(f"\nMerging JSONs with unified transformers...")
         merged_json = self._merge_jsons()
         
         # Step 3: Save merged JSON
         with open(output_path, 'w') as f:
             json.dump(merged_json, f, indent=2)
         
-        print(f"  ✓ Saved merged JSON: {output_path}")
-        print(f"  ✓ Total devices: {len(merged_json['devices'])}")
-        print(f"  ✓ Unified transformers: {len(merged_json['transformer_connections'])}")
+        # print(f"  ✓ Saved merged JSON: {output_path}")
+        # print(f"  ✓ Total devices: {len(merged_json['devices'])}")
+        # print(f"  ✓ Unified transformers: {len(merged_json['transformer_connections'])}")
         
         return output_path
     
@@ -328,4 +328,4 @@ if __name__ == "__main__":
         output_path="output_hybrid/json/hybrid.json", 
         temp_dir="output_hybrid/temp_json" 
     )
-    print(f"\n✓ Done! Merged JSON saved to: {merged_path}")
+    # print(f"\n✓ Done! Merged JSON saved to: {merged_path}")

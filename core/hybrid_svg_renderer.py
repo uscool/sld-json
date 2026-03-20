@@ -44,6 +44,8 @@ TRANSFORMER_SPACE_BELOW = 15    # Vertical space from bottom of transformer symb
 TRANSFORMER_SIZE = 32             # 32x32 viewBox
 LINE_WIDTH = 1                    # Connection line width
 LINE_COLOR = "#000"               # Black
+WIRE_SEPARATION = 4              # Min visual gap (px) between parallel elbow rows
+                                 # when staggering is triggered by detected overlaps.
 
 # Transformer label
 TR_LABEL_OFFSET_X  = -6           # Horizontal gap: symbol right edge → label start (px)
@@ -140,17 +142,20 @@ def extract_svg_inner_content(svg_content: str) -> str:
     return svg_content
 
 
-def manhattan_path(from_point: Tuple[float, float], to_point: Tuple[float, float]) -> str:
+def manhattan_path(
+    from_point: Tuple[float, float],
+    to_point: Tuple[float, float],
+    elbow_y: float | None = None,
+) -> str:
     """
     Generate Manhattan (elbow) routing path: vertical → horizontal → vertical.
-    The horizontal crossover is placed at 1/3 of the vertical span below from_point,
-    guaranteeing a visible elbow even when the gap is small.
+    If elbow_y is supplied it is used directly; otherwise defaults to 1/3 of span.
     """
     x1, y1 = from_point
     x2, y2 = to_point
-    span = abs(y2 - y1)
-    # Place the horizontal segment closer to the start so the elbow is always visible
-    elbow_y = y1 + max(span / 3, 4) if y2 >= y1 else y1 - max(span / 3, 4)
+    if elbow_y is None:
+        span    = abs(y2 - y1)
+        elbow_y = y1 + max(span / 3, 4) if y2 >= y1 else y1 - max(span / 3, 4)
     return f"M {x1:.1f},{y1:.1f} L {x1:.1f},{elbow_y:.1f} L {x2:.1f},{elbow_y:.1f} L {x2:.1f},{y2:.1f}"
 
 
@@ -213,6 +218,8 @@ class HybridSVGRenderer:
         self.transformers: List[TransformerPlacement] = []
         self.canvas_width = 0
         self.canvas_height = 0
+        # (from_i, to_i) -> (space_above, space_below) — set by _calculate_layout
+        self._pair_spaces: Dict[tuple, tuple] = {}
     
     def render(
         self,
@@ -232,15 +239,11 @@ class HybridSVGRenderer:
             svg_output: Output path for stitched SVG
             yolo_output: Output path for YOLO annotations
         """
-        print(f"\n{'='*70}")
-        print(f"HYBRID SVG RENDERER")
-        print(f"{'='*70}")
         
         # Load merged JSON
         with open(merged_json_path, 'r') as f:
             self.merged_json = json.load(f)
         
-        print(f"Rendering {len(individual_json_paths)} voltage levels...")
         
         # Step 1: Render each level
         self._render_levels(individual_json_paths, topology_types)
@@ -257,18 +260,11 @@ class HybridSVGRenderer:
         # Step 5: Generate YOLO
         self._generate_yolo(yolo_output)
         
-        print(f"\n{'='*70}")
-        print(f"RENDERING COMPLETE!")
-        print(f"{'='*70}")
-        print(f"  SVG:  {svg_output}")
-        print(f"  YOLO: {yolo_output}")
-        print()
     
     def _render_levels(self, json_paths: List[str], topology_types: List[str]):
         """Render each level in hybrid mode"""
         for i, (json_path, topology_type) in enumerate(zip(json_paths, topology_types)):
             voltage_label = self.merged_json["layout"]["voltage_levels"][i]["name"]
-            print(f"  - Level {i}: {voltage_label} ({topology_type})")
             
             renderer = RENDERER_MAP[topology_type]
             
@@ -288,23 +284,85 @@ class HybridSVGRenderer:
             ))
     
     def _calculate_layout(self):
-        """Calculate positions for each level"""
-        print(f"\nCalculating layout...")
+        """
+        Two-phase layout.
 
-        inter_level_gap = TRANSFORMER_SPACE_ABOVE + TRANSFORMER_SIZE + TRANSFORMER_SPACE_BELOW
+        Phase 1 — x-only: compute horizontal offsets for each level.
+        Phase 2 — conflict detection: for each inter-level pair, check whether
+            any two wires will share the same natural elbow row AND have
+            overlapping horizontal extents.  X-coordinates are independent of
+            the vertical gap, so this can be done before y positions are known.
+            If conflicts are detected the vertical gap for that pair is expanded
+            to N_conflict * WIRE_SEPARATION so the stagger step in _generate_svg
+            always has enough room to produce visually distinct rows.
+        Phase 3 — y layout: stack levels using per-pair gaps.
+        """
 
+        from collections import defaultdict
+
+        # ── Phase 1: x offsets ───────────────────────────────────────────
         max_width = max(r.width for r in self.level_results)
+        x_offsets = [
+            CANVAS_MARGIN_X + (max_width - r.width) / 2
+            for r in self.level_results
+        ]
+
+        # ── Phase 2: per-pair conflict detection ─────────────────────────
+        # Gather wire x-extents per level pair.
+        # Because all wires in a pair share the same natural elbow_y (same
+        # from_y and tr_top_y), two wires conflict iff their horizontal
+        # extents [min(from_x,tr_x), max(from_x,tr_x)] overlap.
+        unified_transformers = self.merged_json.get("unified_transformers", {})
+        transformer_connections = self.merged_json.get("transformer_connections", {})
+
+        pair_extents: dict = defaultdict(list)  # (from_i,to_i) -> [(from_x, tr_x)]
+        for tr_id, levels in transformer_connections.items():
+            if len(levels) != 2:
+                continue
+            from_i, to_i = levels
+            td = unified_transformers[tr_id]
+            from_orig = td["from_device_id"].split("_", 1)[1] if "_" in td["from_device_id"] else td["from_device_id"]
+            to_orig   = td["to_device_id"].split("_", 1)[1]   if "_" in td["to_device_id"]   else td["to_device_id"]
+            fp = self.level_results[from_i].boundary_pts.get(from_orig, {})
+            tp = self.level_results[to_i].boundary_pts.get(to_orig, {})
+            if not fp or not tp:
+                continue
+            from_x = fp["x"] + x_offsets[from_i]
+            to_x   = tp["x"] + x_offsets[to_i]
+            tr_x   = (from_x + to_x) / 2  # natural centre before separation enforcement
+            pair_extents[(from_i, to_i)].append((from_x, tr_x))
+
+        def _extents_overlap(a0, a1, b0, b1):
+            lo_a, hi_a = min(a0, a1), max(a0, a1)
+            lo_b, hi_b = min(b0, b1), max(b0, b1)
+            return lo_a < hi_b and lo_b < hi_a
+
+        n_levels = len(self.level_results)
+        for i in range(n_levels - 1):
+            wires = pair_extents.get((i, i + 1), [])
+            # Count wires involved in at least one overlap
+            conflict_set = set()
+            for a in range(len(wires)):
+                for b in range(a + 1, len(wires)):
+                    if _extents_overlap(*wires[a], *wires[b]):
+                        conflict_set.add(a)
+                        conflict_set.add(b)
+            n_conflict = len(conflict_set)
+            sa = max(TRANSFORMER_SPACE_ABOVE, n_conflict * WIRE_SEPARATION)
+            sb = max(TRANSFORMER_SPACE_BELOW, n_conflict * WIRE_SEPARATION)
+            self._pair_spaces[(i, i + 1)] = (sa, sb)
+
+        # ── Phase 3: y layout ────────────────────────────────────────────
         current_y = CANVAS_MARGIN_Y
-        
         for i, result in enumerate(self.level_results):
-            x_offset = CANVAS_MARGIN_X + (max_width - result.width) / 2
-            y_offset = current_y
-            
-            self.level_positions[i] = (x_offset, y_offset)
-            current_y += result.height + inter_level_gap
-        
-        self.canvas_width = max_width + 2 * CANVAS_MARGIN_X
-        self.canvas_height = current_y - inter_level_gap + CANVAS_MARGIN_Y
+            self.level_positions[i] = (x_offsets[i], current_y)
+            current_y += result.height
+            if i < n_levels - 1:
+                sa, sb = self._pair_spaces[(i, i + 1)]
+                current_y += sa + TRANSFORMER_SIZE + sb
+
+        self.canvas_width  = max_width + 2 * CANVAS_MARGIN_X
+        self.canvas_height = current_y + CANVAS_MARGIN_Y
     
     def _place_transformers(self):
         """
@@ -320,7 +378,6 @@ class HybridSVGRenderer:
         sorted order so the leftmost upper terminal always connects to the leftmost
         lower terminal.
         """
-        print(f"Placing transformers...")
 
         unified_transformers = self.merged_json.get("unified_transformers", {})
         transformer_connections = self.merged_json.get("transformer_connections", {})
@@ -377,7 +434,11 @@ class HybridSVGRenderer:
                 self.level_positions[from_level_idx][1]
                 + self.level_results[from_level_idx].height
             )
-            tr_center_y = upper_level_bottom + TRANSFORMER_SPACE_ABOVE + TRANSFORMER_SIZE / 2
+            sa, _sb = self._pair_spaces.get(
+                (from_level_idx, to_level_idx),
+                (TRANSFORMER_SPACE_ABOVE, TRANSFORMER_SPACE_BELOW),
+            )
+            tr_center_y = upper_level_bottom + sa + TRANSFORMER_SIZE / 2
 
             # Sort from-points and to-points independently by x
             from_side = sorted(
@@ -404,11 +465,9 @@ class HybridSVGRenderer:
                     to_point=to_point,
                 ))
 
-        print(f"  ✓ Placed {len(self.transformers)} transformers")
     
     def _generate_svg(self, output_path: str):
         """Generate final stitched SVG"""
-        print(f"Generating SVG...")
         
         svg_parts = []
         
@@ -429,35 +488,238 @@ class HybridSVGRenderer:
             svg_parts.append(extract_svg_inner_content(result.svg_content))
             svg_parts.append('</g>')
         
-        # Add transformers
+        # ── Compute elbow map (detect-then-stagger) ──────────────────────
+        #
+        # For each level pair group (same tr_top_y), compute the natural
+        # elbow_y for every wire using the 1/3-span rule.
+        # Then check whether any two wires share the same elbow row AND have
+        # overlapping horizontal extents — a genuine visual overlap.
+        # If NO conflicts are found the natural elbows are kept as-is.
+        # If ANY conflict is found, ALL wires in the pair are redistributed
+        # evenly across the available gap (which _calculate_layout already
+        # expanded to n_conflict * WIRE_SEPARATION).
+        from collections import defaultdict as _ddict
+
+        def _nat_elbow(y_start, y_end):
+            span = abs(y_end - y_start)
+            return y_start + max(span / 3, 4) if y_end >= y_start else y_start - max(span / 3, 4)
+
+        def _horiz_overlap(ax0, ax1, bx0, bx1):
+            return min(ax0, ax1) < max(bx0, bx1) and min(bx0, bx1) < max(ax0, ax1)
+
+        # Group transformers by level pair key (tr_top_y)
+        pair_groups: dict = _ddict(list)
+        for tr in self.transformers:
+            key = round(tr.center[1] - TRANSFORMER_SIZE / 2, 1)
+            pair_groups[key].append(tr)
+
+        elbow_map: dict = {}  # tr.id -> (ey1, ey2)
+
+        for tr_top_key, group in pair_groups.items():
+            # Natural elbows for this group
+            nat: dict = {}
+            for tr in group:
+                tr_top_y    = tr.center[1] - TRANSFORMER_SIZE / 2
+                tr_bottom_y = tr.center[1] + TRANSFORMER_SIZE / 2
+                nat[tr.id] = (
+                    _nat_elbow(tr.from_point[1], tr_top_y),
+                    _nat_elbow(tr_bottom_y, tr.to_point[1]),
+                )
+
+            # Detect path1 conflicts (same ey1 + overlapping from→tr_x extents)
+            conflict1 = False
+            for i in range(len(group)):
+                for j in range(i + 1, len(group)):
+                    ti, tj = group[i], group[j]
+                    if (abs(nat[ti.id][0] - nat[tj.id][0]) < 0.5 and
+                            _horiz_overlap(ti.from_point[0], ti.center[0],
+                                           tj.from_point[0], tj.center[0])):
+                        conflict1 = True
+                        break
+                if conflict1:
+                    break
+
+            # Detect path2 conflicts (same ey2 + overlapping tr_x→to extents)
+            conflict2 = False
+            for i in range(len(group)):
+                for j in range(i + 1, len(group)):
+                    ti, tj = group[i], group[j]
+                    if (abs(nat[ti.id][1] - nat[tj.id][1]) < 0.5 and
+                            _horiz_overlap(ti.center[0], ti.to_point[0],
+                                           tj.center[0], tj.to_point[0])):
+                        conflict2 = True
+                        break
+                if conflict2:
+                    break
+
+            if not conflict1 and not conflict2:
+                # Clean — keep natural elbows
+                for tr in group:
+                    elbow_map[tr.id] = nat[tr.id]
+            else:
+                # Stagger with direction-aware ranking.
+                #
+                # Invariant: if wire j's horizontal [from_x_j, tr_x_j] spans
+                # tr_x_i (wire i's right vertical leg), then frac_j < frac_i.
+                # This places j's elbow above i's, so j's horizontal segment
+                # is above the start of i's right leg — no intersection.
+                #
+                # Sort key per wire: threatened - threatening
+                #   threatened:  others whose horizontals span this wire's tr_x
+                #                → needs HIGH frac (low elbow, short right leg)
+                #   threatening: others' tr_x values this horizontal spans
+                #                → needs LOW frac (high elbow, clears right legs below)
+                #
+                # Sorting ascending by (threatened - threatening) assigns low
+                # frac to threatening wires and high frac to threatened wires,
+                # satisfying the invariant for all wire pairs.
+
+                def _threatened(tr, grp):
+                    tx = tr.center[0]
+                    return sum(
+                        1 for o in grp if o.id != tr.id
+                        and min(o.from_point[0], o.center[0]) < tx < max(o.from_point[0], o.center[0])
+                    )
+
+                def _threatening(tr, grp):
+                    lo, hi = min(tr.from_point[0], tr.center[0]), max(tr.from_point[0], tr.center[0])
+                    return sum(1 for o in grp if o.id != tr.id and lo < o.center[0] < hi)
+
+                scored = sorted(group, key=lambda t: _threatened(t, group) - _threatening(t, group))
+                n = len(scored)
+                for rank, tr in enumerate(scored):
+                    tr_top_y    = tr.center[1] - TRANSFORMER_SIZE / 2
+                    tr_bottom_y = tr.center[1] + TRANSFORMER_SIZE / 2
+                    frac = (rank + 1) / (n + 1)
+                    ey1 = tr.from_point[1] + frac * (tr_top_y    - tr.from_point[1])
+                    ey2 = tr_bottom_y      + frac * (tr.to_point[1] - tr_bottom_y)
+                    elbow_map[tr.id] = (ey1, ey2)
+
+        # ── Interval-based segment collision resolution ──────────────────
+        from collections import defaultdict
+        horizontal_segments = defaultdict(list)  # y -> [(x1, x2)]
+        vertical_segments = defaultdict(list)    # x -> [(y1, y2)]
+
+        def normalize_range(a, b):
+            return (min(a, b), max(a, b))
+
+        def overlaps(a1, a2, b1, b2):
+            return max(a1, b1) < min(a2, b2)
+
+        def resolve_horizontal(p1, p2):
+            y = p1[1]
+            x1, x2 = normalize_range(p1[0], p2[0])
+            k = 0
+            while True:
+                y_shifted = y + k * WIRE_SEPARATION
+                conflict = False
+                for ex1, ex2 in horizontal_segments[y_shifted]:
+                    if overlaps(x1, x2, ex1, ex2):
+                        conflict = True
+                        break
+                if not conflict:
+                    horizontal_segments[y_shifted].append((x1, x2))
+                    return (p1[0], y_shifted), (p2[0], y_shifted)
+                k += 1
+                if k > 100:
+                    horizontal_segments[y_shifted].append((x1, x2))
+                    return (p1[0], y_shifted), (p2[0], y_shifted)
+
+        def resolve_vertical(p1, p2):
+            x = p1[0]
+            y1, y2 = normalize_range(p1[1], p2[1])
+            k = 0
+            while True:
+                x_shifted = x + k * WIRE_SEPARATION
+                conflict = False
+                for ey1, ey2 in vertical_segments[x_shifted]:
+                    if overlaps(y1, y2, ey1, ey2):
+                        conflict = True
+                        break
+                if not conflict:
+                    vertical_segments[x_shifted].append((y1, y2))
+                    return (x_shifted, p1[1]), (x_shifted, p2[1])
+                k += 1
+                if k > 100:
+                    vertical_segments[x_shifted].append((y1, y2))
+                    return (x_shifted, p1[1]), (x_shifted, p2[1])
+
+        # ── Draw transformers ─────────────────────────────────────────────
         svg_parts.append('<!-- Inter-Level Connections -->')
         svg_parts.append('<g id="inter_level_connections">')
-        
+
         for tr in self.transformers:
             tr_x, tr_y = tr.center
-            tr_top_y = tr_y - TRANSFORMER_SIZE / 2
+            tr_top_y    = tr_y - TRANSFORMER_SIZE / 2
             tr_bottom_y = tr_y + TRANSFORMER_SIZE / 2
-            
-            tr_top_point = (tr_x, tr_top_y)
-            tr_bottom_point = (tr_x, tr_bottom_y)
-            
-            # Line from upper level to transformer
-            path1 = manhattan_path(tr.from_point, tr_top_point)
+            ey1, ey2 = elbow_map[tr.id]
+
+            # Path1: from_point → (tr_x, tr_top_y) with elbow at ey1
+            # Decompose into 3 segments
+            start1 = tr.from_point
+            mid1_1 = (start1[0], ey1)
+            mid1_2 = (tr_x, ey1)
+            end1 = (tr_x, tr_top_y)
+
+            segments1 = [
+                (start1, mid1_1),  # vertical
+                (mid1_1, mid1_2),  # horizontal
+                (mid1_2, end1),    # vertical
+            ]
+
+            # Resolve each segment
+            resolved1 = []
+            for p1, p2 in segments1:
+                if abs(p1[1] - p2[1]) < 0.1:  # horizontal
+                    s, e = resolve_horizontal(p1, p2)
+                else:  # vertical
+                    s, e = resolve_vertical(p1, p2)
+                resolved1.append((s, e))
+
+            # Reconstruct path1
+            path1_d = f"M {resolved1[0][0][0]:.1f},{resolved1[0][0][1]:.1f}"
+            for _, end_pt in resolved1:
+                path1_d += f" L {end_pt[0]:.1f},{end_pt[1]:.1f}"
+
             svg_parts.append(
-                f'<path d="{path1}" stroke="{LINE_COLOR}" stroke-width="{LINE_WIDTH}" '
+                f'<path d="{path1_d}" stroke="{LINE_COLOR}" stroke-width="{LINE_WIDTH}" '
                 f'fill="none" stroke-linecap="square"/>'
             )
-            
-            # Transformer symbol
+
             svg_parts.append(generate_transformer_symbol(tr_x, tr_y, tr.label))
-            
-            # Line from transformer to lower level
-            path2 = manhattan_path(tr_bottom_point, tr.to_point)
+
+            # Path2: (tr_x, tr_bottom_y) → to_point with elbow at ey2
+            # Decompose into 3 segments
+            start2 = (tr_x, tr_bottom_y)
+            mid2_1 = (start2[0], ey2)
+            mid2_2 = (tr.to_point[0], ey2)
+            end2 = tr.to_point
+
+            segments2 = [
+                (start2, mid2_1),  # vertical
+                (mid2_1, mid2_2),  # horizontal
+                (mid2_2, end2),    # vertical
+            ]
+
+            # Resolve each segment
+            resolved2 = []
+            for p1, p2 in segments2:
+                if abs(p1[1] - p2[1]) < 0.1:  # horizontal
+                    s, e = resolve_horizontal(p1, p2)
+                else:  # vertical
+                    s, e = resolve_vertical(p1, p2)
+                resolved2.append((s, e))
+
+            # Reconstruct path2
+            path2_d = f"M {resolved2[0][0][0]:.1f},{resolved2[0][0][1]:.1f}"
+            for _, end_pt in resolved2:
+                path2_d += f" L {end_pt[0]:.1f},{end_pt[1]:.1f}"
+
             svg_parts.append(
-                f'<path d="{path2}" stroke="{LINE_COLOR}" stroke-width="{LINE_WIDTH}" '
+                f'<path d="{path2_d}" stroke="{LINE_COLOR}" stroke-width="{LINE_WIDTH}" '
                 f'fill="none" stroke-linecap="square"/>'
             )
-        
+
         svg_parts.append('</g>')
         svg_parts.append('</svg>')
         
@@ -465,11 +727,9 @@ class HybridSVGRenderer:
         with open(output_path, 'w') as f:
             f.write('\n'.join(svg_parts))
         
-        print(f"  ✓ Saved SVG")
     
     def _generate_yolo(self, output_path: str):
         """Generate merged YOLO annotations"""
-        print(f"Generating YOLO annotations...")
         
         annotations = []
         
@@ -520,7 +780,6 @@ class HybridSVGRenderer:
         with open(output_path, 'w') as f:
             f.write('\n'.join(annotations))
         
-        print(f"  ✓ Saved YOLO ({len(annotations)} annotations)")
 
 
 # Example usage

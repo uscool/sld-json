@@ -89,30 +89,6 @@
       "bay_id": null
     },
     {
-      "id": "FDR_2",
-      "label": "220kV-FDR-01",
-      "type": "Feeder",
-      "voltage": "220kV",
-      "bus_role": null,
-      "bay_id": null
-    },
-    {
-      "id": "FDR_3",
-      "label": "220kV-FDR-02",
-      "type": "Feeder",
-      "voltage": "220kV",
-      "bus_role": null,
-      "bay_id": null
-    },
-    {
-      "id": "FDR_4",
-      "label": "220kV-FDR-03",
-      "type": "Feeder",
-      "voltage": "220kV",
-      "bus_role": null,
-      "bay_id": null
-    },
-    {
       "id": "ISO_BOT_1",
       "label": "220kV_01_DSA",
       "type": "Isolator",
@@ -169,7 +145,7 @@
       "bay_id": null
     },
     {
-      "id": "TR_UP_1",
+      "id": "TR_DN_2",
       "label": "220kV-TR-02",
       "type": "Transformer",
       "voltage": "220kV",
@@ -177,8 +153,32 @@
       "bay_id": null
     },
     {
-      "id": "TR_UP_2",
+      "id": "TR_DN_3",
       "label": "220kV-TR-03",
+      "type": "Transformer",
+      "voltage": "220kV",
+      "bus_role": null,
+      "bay_id": null
+    },
+    {
+      "id": "TR_DN_4",
+      "label": "220kV-TR-04",
+      "type": "Transformer",
+      "voltage": "220kV",
+      "bus_role": null,
+      "bay_id": null
+    },
+    {
+      "id": "TR_UP_1",
+      "label": "220kV-TR-05",
+      "type": "Transformer",
+      "voltage": "220kV",
+      "bus_role": null,
+      "bay_id": null
+    },
+    {
+      "id": "TR_UP_2",
+      "label": "220kV-TR-06",
       "type": "Transformer",
       "voltage": "220kV",
       "bus_role": null,
@@ -187,12 +187,68 @@
   ],
   "connections": [
     {
-      "from": "BRK_3_2",
-      "to": "FDR_3"
+      "from": "BRK_1_2",
+      "to": "TR_DN_1"
+    },
+    {
+      "from": "TR_UP_1",
+      "to": "BRK_1_1"
+    },
+    {
+      "from": "BRK_1_2",
+      "to": "BRK_1_3"
+    },
+    {
+      "from": "BRK_3_1",
+      "to": "BRK_3_2"
+    },
+    {
+      "from": "BUS_001",
+      "to": "ISO_TOP_3"
+    },
+    {
+      "from": "BUS_001",
+      "to": "ISO_TOP_2"
+    },
+    {
+      "from": "BRK_2_1",
+      "to": "BRK_2_2"
+    },
+    {
+      "from": "BRK_1_1",
+      "to": "BRK_1_2"
+    },
+    {
+      "from": "ISO_TOP_2",
+      "to": "BRK_2_1"
+    },
+    {
+      "from": "BUS_001",
+      "to": "ISO_TOP_1"
     },
     {
       "from": "TR_UP_2",
       "to": "BRK_3_1"
+    },
+    {
+      "from": "ISO_BOT_2",
+      "to": "BRK_2_3"
+    },
+    {
+      "from": "BUS_002",
+      "to": "ISO_BOT_2"
+    },
+    {
+      "from": "ISO_TOP_3",
+      "to": "BRK_3_1"
+    },
+    {
+      "from": "BRK_3_2",
+      "to": "TR_DN_3"
+    },
+    {
+      "from": "ISO_TOP_1",
+      "to": "BRK_1_1"
     },
     {
       "from": "ISO_BOT_3",
@@ -200,97 +256,41 @@
     },
     {
       "from": "BUS_002",
-      "to": "ISO_BOT_3"
-    },
-    {
-      "from": "BUS_002",
-      "to": "ISO_BOT_2"
-    },
-    {
-      "from": "BRK_1_2",
-      "to": "BRK_1_3"
-    },
-    {
-      "from": "BUS_002",
       "to": "ISO_BOT_1"
     },
     {
-      "from": "BRK_2_2",
-      "to": "FDR_2"
-    },
-    {
-      "from": "BRK_2_2",
-      "to": "BRK_2_3"
-    },
-    {
-      "from": "BRK_1_2",
-      "to": "TR_DN_1"
+      "from": "BUS_002",
+      "to": "ISO_BOT_3"
     },
     {
       "from": "BRK_2_1",
-      "to": "BRK_2_2"
+      "to": "TR_DN_4"
     },
     {
-      "from": "BRK_2_1",
-      "to": "FDR_4"
-    },
-    {
-      "from": "BRK_3_1",
-      "to": "BRK_3_2"
-    },
-    {
-      "from": "ISO_TOP_3",
-      "to": "BRK_3_1"
-    },
-    {
-      "from": "ISO_BOT_1",
-      "to": "BRK_1_3"
-    },
-    {
-      "from": "ISO_TOP_2",
-      "to": "BRK_2_1"
-    },
-    {
-      "from": "BRK_1_1",
-      "to": "BRK_1_2"
-    },
-    {
-      "from": "ISO_TOP_1",
-      "to": "BRK_1_1"
-    },
-    {
-      "from": "BUS_001",
-      "to": "ISO_TOP_1"
-    },
-    {
-      "from": "BUS_001",
-      "to": "ISO_TOP_2"
+      "from": "BRK_2_2",
+      "to": "TR_DN_2"
     },
     {
       "from": "BRK_3_2",
       "to": "BRK_3_3"
     },
     {
-      "from": "BUS_001",
-      "to": "ISO_TOP_3"
+      "from": "ISO_BOT_1",
+      "to": "BRK_1_3"
     },
     {
-      "from": "ISO_BOT_2",
+      "from": "BRK_2_2",
       "to": "BRK_2_3"
-    },
-    {
-      "from": "TR_UP_1",
-      "to": "BRK_1_1"
     }
   ],
   "layout": {
     "topology_mode": "STANDARD",
     "topology_type": "BREAKER_AND_HALF",
     "terminals": [
-      "FDR_2",
-      "FDR_3",
-      "FDR_4",
       "TR_DN_1",
+      "TR_DN_2",
+      "TR_DN_3",
+      "TR_DN_4",
       "TR_UP_1",
       "TR_UP_2"
     ],
@@ -300,7 +300,10 @@
         "TR_UP_2"
       ],
       "downstream": [
-        "TR_DN_1"
+        "TR_DN_1",
+        "TR_DN_2",
+        "TR_DN_3",
+        "TR_DN_4"
       ]
     }
   }

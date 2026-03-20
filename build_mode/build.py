@@ -16,7 +16,7 @@ from core.render_sngl_bs import render_single_bus_svg
 
 def main():
 
-    TOPOLOGY = "SINGLE_BUS"
+    TOPOLOGY = "BREAKER_AND_HALF"
     
     BASE = os.path.dirname(__file__)
     JSON_PATH = os.path.join(BASE, "json", f"{TOPOLOGY.lower()}.json")
@@ -57,8 +57,8 @@ def main():
             bayCount=3,
             num_upstream_transformers=2,
             num_generators=0,
-            num_downstream_transformers=1,
-            num_feeders=3,
+            num_downstream_transformers=4,
+            num_feeders=0,
             filepath=JSON_PATH,
         )
 
@@ -110,7 +110,7 @@ def main():
         "MESH":              render_mesh_svg,
     }
 
-    result = render_map[TOPOLOGY](JSON_PATH, SVG_PATH, "standalone")
+    result = render_map[TOPOLOGY](JSON_PATH, SVG_PATH, "hybrid")
     if result:
         print(result)
 
