@@ -38,8 +38,8 @@ import core.main_hybrid as hybrid
 # DEFAULT CONFIG  (mirrors the globals in each sub-script)
 # ─────────────────────────────────────────────────────────────────────────────
 
-DEFAULT_STANDALONE_DIR     = "../output"
-DEFAULT_HYBRID_DIR         = "../output"
+DEFAULT_STANDALONE_DIR     = "../input"
+DEFAULT_HYBRID_DIR         = "../input"
 DEFAULT_STANDALONE_SAMPLES = standalone.NUM_SAMPLES   # per topology
 DEFAULT_HYBRID_SAMPLES     = hybrid.NUM_SAMPLES
 
