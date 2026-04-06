@@ -438,29 +438,124 @@ def clean_label(text):
 
 
 def export_to_json(matched_results, output_filename="sld_nodes.json"):
-    json_data = {
-        "document_type": "Single Line Diagram",
-        "nodes": []
+    import re
+
+    COMPONENT_TYPE_MAP = {
+        "Circuit_Breaker": "Breaker",
+        "Switch":          "Isolator",
+        "Transformer":     "Transformer",
+        "Load":            "Feeder",
+        "Generator":       "GridSource",
     }
 
-    for idx, pair in enumerate(matched_results):
-        cleaned_label = clean_label(pair.get("matched_text"))
-        class_id = pair.get("symbol_class")
-        center = pair.get("symbol_center", (None, None))
+    TYPE_ORDER = {"Breaker": 0, "Feeder": 1, "GridSource": 2,
+                  "Isolator": 3, "Transformer": 4}
 
-        json_data["nodes"].append({
-            "node_id": f"Node_{idx}",
-            "class_id": class_id,
-            "component_type": CLASS_MAP.get(class_id, "UNKNOWN"),
-            "label": cleaned_label,
-            "coordinates": {
-                "x": center[0],
-                "y": center[1]
-            }
+    def extract_ids_from_label(label):
+        m = re.match(r"(\d+kV)/(\d+kV)-TR-(\d+)", label)
+        if m:
+            return {"kind": "TR", "voltage": f"{m.group(1)}/{m.group(2)}", "index": int(m.group(3))}
+        m = re.match(r"(\d+kV)[_]?(\d+)[_]?CB(\d+)", label)
+        if m:
+            return {"kind": "CB", "voltage": m.group(1), "bay": int(m.group(2)), "pos": int(m.group(3))}
+        m = re.match(r"(\d+kV)[_]?(\d+)[_]?DS([AB])", label)
+        if m:
+            return {"kind": "DS", "voltage": m.group(1), "bay": int(m.group(2)), "side": m.group(3)}
+        m = re.match(r"(\d+kV)-TR-(\d+)", label)
+        if m:
+            return {"kind": "TR", "voltage": m.group(1), "index": int(m.group(2))}
+        m = re.match(r"(\d+kV)-FDR-(\d+)", label)
+        if m:
+            return {"kind": "FDR", "voltage": m.group(1), "index": int(m.group(2))}
+        m = re.match(r"(\d+kV)-GEN-(\d+)", label)
+        if m:
+            return {"kind": "GEN", "voltage": m.group(1), "index": int(m.group(2))}
+        return {"kind": "UNKNOWN"}
+
+    def extract_voltage(label):
+        m = re.match(r"(\d+kV)", label)
+        return m.group(1) if m else "220kV"
+
+    def normalize_label(label):
+        label = re.sub(
+            r'((?:220|132|66|33)kV)[_]?(\d{1,3})[_]?((?:DSA|DSB|CB\d*|GEN|FDR|TR)\d*)',
+            r'\1_\2_\3',
+            label
+        )
+        label = re.sub(
+            r'((?:220|132|66|33)kV)[_-]?(TR|FDR|GEN)[_-]?(\d+)',
+            r'\1-\2-\3',
+            label
+        )
+        return label
+
+    devices           = []
+    seen_ids          = set()
+    voltage_global    = "220kV"
+    transformer_count = 0
+    unknown_count     = 0
+    gen_count         = 0
+
+    for pair in matched_results:
+        raw_label = pair.get("matched_text")
+
+        if raw_label is None or is_bus_label(raw_label):
+            continue
+
+        label     = normalize_label(clean_label(raw_label))
+        class_id  = pair.get("symbol_class")
+        comp_type = CLASS_MAP.get(class_id, "UNKNOWN")
+        dev_type  = COMPONENT_TYPE_MAP.get(comp_type, comp_type)
+
+        parsed  = extract_ids_from_label(label)
+        kind    = parsed["kind"]
+        voltage = parsed.get("voltage", extract_voltage(label))
+
+        # ── IDs match the trained format — no voltage tag ──
+        if kind == "CB":
+            dev_id = f"BRK_{parsed['bay']}_{parsed['pos']}"
+            bay_id = f"BAY_{parsed['bay']}"
+        elif kind == "DS":
+            side   = "BOT" if parsed["side"] == "A" else "TOP"
+            dev_id = f"ISO_{side}_{parsed['bay']}"
+            bay_id = f"BAY_{parsed['bay']}"
+        elif kind == "TR":
+            transformer_count += 1
+            dev_id = f"TR_DN_{transformer_count}"
+            bay_id = None
+        elif kind == "FDR":
+            dev_id = f"FDR_{parsed['index'] + 1}"
+            bay_id = None
+        elif kind == "GEN":
+            gen_count += 1
+            dev_id = f"GEN_{gen_count}"
+            bay_id = None
+        else:
+            unknown_count += 1
+            dev_id = f"UNKNOWN_{unknown_count}"
+            bay_id = None
+
+        # Deduplicate IDs
+        original_id = dev_id
+        suffix = 1
+        while dev_id in seen_ids:
+            dev_id = f"{original_id}_v{suffix}"
+            suffix += 1
+        seen_ids.add(dev_id)
+
+        devices.append({
+            "id":       dev_id,
+            "label":    label,
+            "type":     dev_type,
+            "voltage":  voltage,
+            "bus_role": None,
+            "bay_id":   bay_id,
         })
 
+    devices.sort(key=lambda d: (TYPE_ORDER.get(d["type"], 9), d["id"]))
+
     with open(output_filename, "w", encoding="utf-8") as f:
-        json.dump(json_data, f, indent=4)
+        json.dump({"devices": devices}, f, indent=4)
 
     print(f"Saved {len(matched_results)} nodes to {output_filename}")
 
