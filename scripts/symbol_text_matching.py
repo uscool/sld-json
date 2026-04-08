@@ -39,14 +39,17 @@ DEBUG = False
 # OCR ENGINE — initialized once at module load
 # ==========================================
 _ocr_engine = PaddleOCR(
-    use_angle_cls=True,
     lang='en',
-    det_db_thresh=0.1,
-    det_db_box_thresh=0.4,
-    det_db_unclip_ratio=2.0,
-    det_limit_side_len=4000,  # lowered from 4800 to avoid resize/oneDNN crash
-    det_limit_type='max',
-    # rec_char_type removed — no longer supported in PaddleOCR 3.x
+    use_doc_orientation_classify=False,
+    use_doc_unwarping=False,
+    use_textline_orientation=False,
+    text_detection_model_name='PP-OCRv4_mobile_det',
+    text_recognition_model_name='en_PP-OCRv4_mobile_rec',
+    text_det_limit_side_len=1920,
+    text_det_limit_type='max',
+    text_det_thresh=0.1,
+    text_det_box_thresh=0.4,
+    text_det_unclip_ratio=2.0,
 )
 
 
@@ -85,21 +88,15 @@ def get_clean_text(image_path, ocr_scale, min_chars=3):
     valid_text_boxes = []
 
     for res in results:
-        # PaddleOCR 3.x returns result objects — try dict access first,
-        # then attribute access, to handle minor version differences
-        polys = None
-        texts = None
+        if not isinstance(res, dict):
+            continue
 
-        if isinstance(res, dict):
-            polys = res.get("boxes") or res.get("dt_boxes")
-            texts = res.get("rec_texts") or res.get("rec_text")
-        else:
-            polys = getattr(res, "boxes", None) or getattr(res, "dt_boxes", None)
-            texts = getattr(res, "rec_texts", None) or getattr(res, "rec_text", None)
+        polys = res.get("rec_polys") or res.get("dt_polys")
+        texts = res.get("rec_texts")
 
         if polys is None or texts is None:
             if DEBUG:
-                print(f"  [OCR] Could not extract boxes/texts from result: {type(res)}, attrs: {dir(res)}")
+                print(f"  [OCR] Could not extract boxes/texts. Keys present: {list(res.keys())}")
             continue
 
         for bbox, text in zip(polys, texts):
@@ -110,7 +107,6 @@ def get_clean_text(image_path, ocr_scale, min_chars=3):
                 valid_text_boxes.append((int_bbox, text))
 
     return valid_text_boxes
-
 
 # ==========================================
 # YOLO SYMBOL DETECTION
@@ -276,7 +272,6 @@ def match_symbols_to_text_ray(base_image_path, ocr_image_path, ocr_scale,
         symbol_type = CLASS_MAP.get(sym["class"], "Unknown")
         effective_max_dist = MAX_DISTANCE_BY_CLASS.get(sym["class"], max_distance)
 
-        # Primary pass: type-aware matching
         for tb in text_boxes:
             label = clean_label(tb["text"])
 
@@ -310,23 +305,12 @@ def match_symbols_to_text_ray(base_image_path, ocr_image_path, ocr_scale,
                 best_match_text_raw = tb["text"]
                 best_match_center = tb["center"]
 
-        # Fallback pass: relax type constraint, keep distance constraint
         if best_match is None:
             for tb in text_boxes:
                 label = clean_label(tb["text"])
 
                 if is_bus_label(label):
                     continue
-                if is_feeder_label(label) and symbol_type != "Load":
-                    continue
-
-                label_type = get_label_type(label)
-
-                if label_type != symbol_type:
-                    if label_type == "Unknown":
-                        pass
-                    else:
-                        continue
 
                 dy = abs(cy - tb["center"][1])
                 if dy > effective_max_dist:
@@ -344,7 +328,7 @@ def match_symbols_to_text_ray(base_image_path, ocr_image_path, ocr_scale,
                     best_match_text_raw = tb["text"]
                     best_match_center = tb["center"]
 
-        # Reject if score too high
+
         if MAX_ACCEPTABLE_SCORE is not None and min_dist > MAX_ACCEPTABLE_SCORE:
             if DEBUG:
                 print(f"  [REJECTED] sym={symbol_type} @ ({cx},{cy}) best_score={min_dist:.1f}")
@@ -352,11 +336,9 @@ def match_symbols_to_text_ray(base_image_path, ocr_image_path, ocr_scale,
             best_match_text_raw = None
             best_match_center = None
 
-        # Infer voltage prefix if label starts with '_'
         if best_match is not None:
             best_match = infer_voltage_prefix(best_match, sym["center"][1], img_height)
 
-        # Mark text box as used
         if best_match_text_raw:
             for tb in text_boxes:
                 if tb["text"] == best_match_text_raw:
@@ -417,19 +399,28 @@ def clean_label(text):
 
     text = re.sub(r'\b220KV\b', '220kV', text)
     text = re.sub(r'\b22OKV\b', '220kV', text)
+    text = re.sub(r'\b220K_', '220kV_', text)
+    text = re.sub(r'\b220K(?=\d)', '220kV_', text)
+    
+    text = re.sub(r'\b33K_', '33kV_', text)
+    text = re.sub(r'\b33K(?=\d)', '33kV_', text)
+    text = re.sub(r'\b66K_', '66kV_', text)
+    text = re.sub(r'\b66K(?=\d)', '66kV_', text)
+    text = re.sub(r'\b132K_', '132kV_', text)
+    text = re.sub(r'\b132K(?=\d)', '132kV_', text)
 
     parts = text.split('kV')
     cleaned_parts = [re.sub(r"[^A-Z0-9_/\\-]", "", part) for part in parts]
     text = 'kV'.join(cleaned_parts)
 
     text = re.sub(
-        r'((?:33|66|132)kV)(\d{1,3})((?:DSA|DSB|DSC|CB\d*|GEN|FDR|TR))',
+        r'((?:220|33|66|132)kV)(\d{1,3})((?:DSA|DSB|DSC|CB\d*|GEN|FDR|TR))',
         r'\1_\2_\3',
         text
     )
 
     text = re.sub(
-        r'((?:33|66|132)kV_\d{1,3})(CB\d+|DSA|DSB|DSC)',
+        r'((?:220|33|66|132)kV_\d{1,3})(CB\d+|DSA|DSB|DSC)',
         r'\1_\2',
         text
     )
@@ -491,7 +482,6 @@ def export_to_json(matched_results, output_filename="sld_nodes.json"):
 
     devices           = []
     seen_ids          = set()
-    voltage_global    = "220kV"
     transformer_count = 0
     unknown_count     = 0
     gen_count         = 0
@@ -511,20 +501,22 @@ def export_to_json(matched_results, output_filename="sld_nodes.json"):
         kind    = parsed["kind"]
         voltage = parsed.get("voltage", extract_voltage(label))
 
-        # ── IDs match the trained format — no voltage tag ──
         if kind == "CB":
-            dev_id = f"BRK_{parsed['bay']}_{parsed['pos']}"
+            voltage_short = voltage.replace("kV", "")
+            dev_id = f"BRK_{voltage_short}_{parsed['bay']}_{parsed['pos']}"
             bay_id = f"BAY_{parsed['bay']}"
         elif kind == "DS":
             side   = "BOT" if parsed["side"] == "A" else "TOP"
-            dev_id = f"ISO_{side}_{parsed['bay']}"
+            voltage_short = voltage.replace("kV", "")
+            dev_id = f"ISO_{side}_{voltage_short}_{parsed['bay']}"
             bay_id = f"BAY_{parsed['bay']}"
         elif kind == "TR":
             transformer_count += 1
             dev_id = f"TR_DN_{transformer_count}"
             bay_id = None
         elif kind == "FDR":
-            dev_id = f"FDR_{parsed['index'] + 1}"
+            voltage_short = voltage.replace("kV", "")
+            dev_id = f"FDR_{voltage_short}_{parsed['index']}"
             bay_id = None
         elif kind == "GEN":
             gen_count += 1
@@ -535,7 +527,6 @@ def export_to_json(matched_results, output_filename="sld_nodes.json"):
             dev_id = f"UNKNOWN_{unknown_count}"
             bay_id = None
 
-        # Deduplicate IDs
         original_id = dev_id
         suffix = 1
         while dev_id in seen_ids:
