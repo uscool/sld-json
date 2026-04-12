@@ -9,9 +9,8 @@ from paddleocr import PaddleOCR
 from ultralytics import YOLO
 
 
-# ==========================================
-# CONFIGURATION
-# ==========================================
+
+# Label Mapping
 CLASS_MAP = {
     0: "Generator",
     1: "Transformer",
@@ -22,9 +21,9 @@ CLASS_MAP = {
 }
 
 MAX_DISTANCE_BY_CLASS = {
-    0: 600,   # Generator — labels can be far, raise to reduce UNKNOWNs
-    1: 600,   # Transformer — same
-    2: 300,   # Circuit_Breaker
+    0: 600,   # Generator
+    1: 600,   # Transformer
+    2: 300,   # Circuit Breaker
     3: 400,   # Load
     4: 300,   # Capacitor
     5: 300,   # Switch
@@ -35,9 +34,7 @@ MAX_ACCEPTABLE_SCORE = 2000
 DEBUG = False
 
 
-# ==========================================
-# OCR ENGINE — initialized once at module load
-# ==========================================
+# Paddle OCR Engine (Latest Version - Updated from 2.6.2)
 _ocr_engine = PaddleOCR(
     lang='en',
     use_doc_orientation_classify=False,
@@ -53,24 +50,8 @@ _ocr_engine = PaddleOCR(
 )
 
 
-# ==========================================
-# OCR
-# ==========================================
+# Cleaning OCR text - 1
 def get_clean_text(image_path, ocr_scale, min_chars=3):
-    """
-    Run OCR on an already-preprocessed image and return filtered text boxes.
-
-    Parameters:
-        image_path (str)   : path to the preprocessed image (written by main.py)
-        ocr_scale  (float) : scale factor used during preprocessing; OCR bbox
-                             coords are divided by this to map back to original
-                             image coordinate space
-        min_chars  (int)   : minimum character length to keep a text box
-
-    Returns:
-        list of (bbox, text) where bbox = [[x1,y1],[x2,y2],[x3,y3],[x4,y4]]
-        in original image coordinates
-    """
     if not os.path.exists(image_path):
         raise FileNotFoundError(f"OCR image not found: {image_path}")
 
@@ -108,23 +89,18 @@ def get_clean_text(image_path, ocr_scale, min_chars=3):
 
     return valid_text_boxes
 
-# ==========================================
 # YOLO SYMBOL DETECTION
-# ==========================================
 def detect_symbols_from_yolo(image_path, model_path, conf=0.25):
-    """
-    Detect symbols from a YOLO model directly from an image.
+    '''
     Returns:
-    [
-        {
+    {
             "class": int,
             "confidence": float,
             "center": (cx, cy),
             "bbox": (x1, y1, x2, y2)
-        },
-        ...
-    ]
-    """
+    }
+    '''
+    
     if not os.path.exists(image_path):
         raise FileNotFoundError(f"Image not found for YOLO detection: {image_path}")
     if not os.path.exists(model_path):
@@ -154,10 +130,7 @@ def detect_symbols_from_yolo(image_path, model_path, conf=0.25):
     print(f"Detected {len(symbols)} symbols from YOLO.")
     return symbols
 
-
-# ==========================================
-# LABEL HELPERS
-# ==========================================
+# Cleaning OCR text - 2
 def is_bus_label(label):
     return "BUS" in label.upper()
 
@@ -181,26 +154,18 @@ def get_label_type(label):
     else:
         return "Unknown"
 
+# Manage missing voltage prefix
 def infer_voltage_prefix(label, symbol_y, img_height):
-    """
-    Inject missing voltage prefix for labels like '_03_CB' that OCR
-    failed to read, based on the symbol's y-coordinate zone.
-    Tune the ratio thresholds to match your diagram's bus y-positions.
-    """
+
     if not label.startswith('_'):
         return label
     ratio = symbol_y / img_height
     prefix = "66kV" if ratio < 0.35 else "33kV"
     return prefix + label
 
+# score function - reuse penalty function
 def compute_score(cx, cy, tb, beam_width):
-    """
-    Compute match score between a symbol center and a text box.
-    - dy is the primary distance signal
-    - dx contributes a soft normalised penalty — NOT a hard gate,
-      so rotated labels far to the side are still considered
-    - reuse_penalty set to 5000 to strongly discourage duplicate matches
-    """
+
     dx = abs(cx - tb["center"][0])
     dy = abs(cy - tb["center"][1])
     horizontal_penalty = (dx / beam_width) * 100 if beam_width > 0 else dx
@@ -208,25 +173,9 @@ def compute_score(cx, cy, tb, beam_width):
     return dy + horizontal_penalty + reuse_penalty
 
 
-# ==========================================
-# SYMBOL-TEXT MATCHING
-# ==========================================
-def match_symbols_to_text_ray(base_image_path, ocr_image_path, ocr_scale,
-                               symbols, max_distance, beam_width):
-    """
-    Match already-detected symbols to OCR text using ray/beam logic.
+# SYMBOL-TEXT MATCHING - Sunray method
+def match_symbols_to_text_ray(base_image_path, ocr_image_path, ocr_scale, symbols, max_distance, beam_width):
 
-    Parameters:
-      - base_image_path : original image path (used for dimensions + visualisation)
-      - ocr_image_path  : preprocessed image path written by main.py — OCR runs
-                          directly on this, no further preprocessing inside
-      - ocr_scale       : scale factor from preprocessing; passed to get_clean_text
-                          so OCR coords are correctly mapped to original image space
-      - symbols         : output of detect_symbols_from_yolo(...)
-      - max_distance    : default vertical cutoff (px); overridden per class
-                          by MAX_DISTANCE_BY_CLASS
-      - beam_width      : soft horizontal scale — used in scoring, NOT a hard gate
-    """
     if not os.path.exists(base_image_path):
         raise FileNotFoundError(f"Base image not found: {base_image_path}")
     if not os.path.exists(ocr_image_path):
@@ -364,9 +313,7 @@ def match_symbols_to_text_ray(base_image_path, ocr_image_path, ocr_scale,
     return matched_results
 
 
-# ==========================================
 # DATA CLEANING
-# ==========================================
 def clean_label(text):
     if not text:
         return "UNKNOWN"
