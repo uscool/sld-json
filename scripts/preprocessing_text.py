@@ -4,14 +4,6 @@ import numpy as np
 MAX_SAFE_DIM = 32000
 
 def preprocess_image_text(image_path):
-    """
-    Preprocess an image for OCR.
-
-    Returns:
-        bw    (np.ndarray) : upscaled binary image ready for PaddleOCR
-        scale (float)      : factor applied; divide OCR bbox coords by this
-                             to convert back to original image coordinates
-    """
     img = cv2.imread(image_path, cv2.IMREAD_COLOR)
     if img is None:
         raise FileNotFoundError(f"Could not read image: {image_path}")
