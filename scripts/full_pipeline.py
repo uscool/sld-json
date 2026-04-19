@@ -1,19 +1,16 @@
-"""
-full_pipeline.py
-================
-End-to-end pipeline: Generate → Detect Symbols → Extract Lines
 
-Orchestrates three stages:
-  1. Generate synthetic SLD diagrams (standalone + hybrid)
-  2. Detect symbols and text in generated diagrams
-  3. Extract lines and connectivity
-  4. Aggregate and visualize all results
+# Generate fresh diagrams and run full pipeline
+#python full_pipeline.py --diagrams 20
+#python full_pipeline.py --diagrams 50 --standalone-only
 
-Usage:
-    python full_pipeline.py [--diagrams 10] [--output pipeline_output]
-    python full_pipeline.py --standalone-only --diagrams 5
-    python full_pipeline.py --hybrid-only --diagrams 3
-"""
+# Run pipeline on existing images (skips Stage 1)
+#python full_pipeline.py --image path/to/diagram.png
+#python full_pipeline.py --images-dir path/to/folder/
+
+# Skip stages
+#python full_pipeline.py --skip-line-extraction
+#python full_pipeline.py --skip-symbol-detection
+#python full_pipeline.py --skip-final-json
 
 import os
 import sys
@@ -37,7 +34,7 @@ from main import (
     preprocess_image_text,
     detect_symbols_from_yolo,
     match_symbols_to_text_ray,
-    export_to_json,
+    export_to_json,   
     draw_matches
 )
 from line_extraction import (
@@ -49,6 +46,10 @@ from line_extraction import (
     visualize_results as visualize_lines,
     export_results as export_line_results,
     merge_connectivity_with_symbol_json
+)
+
+from domain_conversion import (
+    build_final_json
 )
 
 
@@ -153,6 +154,33 @@ class FullPipeline:
             self.pipeline_summary["errors"].append(error_msg)
             return 0
     
+    def load_existing_images(self, paths: list) -> int:
+
+        print("\n" + "=" * 80)
+        print("SKIPPING STAGE 1: LOADING EXISTING IMAGES")
+        print("=" * 80)
+ 
+        diagrams = [p for p in paths if os.path.isfile(p) and p.lower().endswith(".png")]
+ 
+        if not diagrams:
+            print("\n✗ No valid PNG files found in the provided path(s).")
+            return 0
+ 
+        self.generation_results = {
+            "diagrams":   diagrams,
+            "count":      len(diagrams),
+            "standalone": len(diagrams),
+            "hybrid":     0,
+        }
+        self.pipeline_summary["total_diagrams"] = len(diagrams)
+        self.pipeline_summary["stages_completed"].append("generation (skipped — existing images)")
+ 
+        print(f"\n✓ Loaded {len(diagrams)} image(s):")
+        for d in diagrams:
+            print(f"  {d}")
+ 
+        return len(diagrams)
+ 
     # ───────────────────────────────────────────────────────────────────────────
     # STAGE 2: SYMBOL DETECTION
     # ───────────────────────────────────────────────────────────────────────────
@@ -240,28 +268,10 @@ class FullPipeline:
                     beam_width=80
                 )
                 
-                # Step 5: Export JSON (all symbols, not just matched)
+                
+                # Step 5: Export JSON using proper export_to_json (same as standalone pipeline)
                 json_output_path = os.path.join(diagram_output, "sld_nodes.json")
-                
-                # Export all detected symbols as devices
-                devices = []
-                class_names = {0: "Generator", 1: "Transformer", 2: "Circuit_Breaker", 3: "Load", 4: "Capacitor", 5: "Switch"}
-                for idx, sym in enumerate(symbols):
-                    class_id = sym.get("class", 0)
-                    class_name = class_names.get(class_id, "Unknown")
-                    devices.append({
-                        "id": f"device_{idx}",
-                        "label": f"{class_name}_{idx}",
-                        "type": class_name,
-                        "voltage": "220kV",  # Default, would be matched from text
-                        "bus_role": None,
-                        "bay_id": None,
-                        "detection": sym  # Store YOLO detection info
-                    })
-                
-                # Also export matched results for reference
-                with open(json_output_path, "w") as f:
-                    json.dump({"devices": devices}, f, indent=2)
+                export_to_json(matched_results, output_filename=json_output_path)
                 
                 # Step 6: Visualize
                 vis_output_path = os.path.join(diagram_output, "matches_visualization.png")
@@ -482,189 +492,294 @@ class FullPipeline:
         
         return merged_count
     
-    # ───────────────────────────────────────────────────────────────────────────
-    # RESULTS AGGREGATION & EXPORT
-    # ───────────────────────────────────────────────────────────────────────────
-    
-    def aggregate_results(self) -> None:
-        """Aggregate all pipeline results into summary JSON."""
-        
+
+# ─────────────────────────────────────────────────────────────────────────────
+# STAGE 5  (add inside FullPipeline, after stage4_merge_connectivity)
+# ─────────────────────────────────────────────────────────────────────────────
+
+    def stage5_generate_final_json(self) -> int:
+
+        print("\n" + "=" * 80)
+        print("STAGE 5: GENERATING FINAL DOMAIN JSON")
+        print("=" * 80)
+ 
+        if not self.symbol_detection_results or not self.line_extraction_results:
+            print("\n⚠  Stages 2 and 3 must complete before Stage 5.")
+            return 0
+ 
+        processed = 0
+ 
+        for diagram_name, line_result in self.line_extraction_results.items():
+            if not line_result.get("success"):
+                continue
+ 
+            det_result = self.symbol_detection_results.get(diagram_name, {})
+            if not det_result.get("success"):
+                continue
+ 
+            sld_nodes_path   = det_result.get("json_output")
+            line_output_dir  = line_result.get("output_dir")
+ 
+            if not sld_nodes_path or not os.path.exists(sld_nodes_path):
+                print(f"  skip {diagram_name}: missing sld_nodes.json")
+                continue
+ 
+            line_results_path = os.path.join(line_output_dir, "line_extraction_results.json")
+            if not os.path.exists(line_results_path):
+                print(f"  skip {diagram_name}: missing line_extraction_results.json")
+                continue
+ 
+            try:
+                print(f"\n  {diagram_name}...")
+ 
+                final = build_final_json(sld_nodes_path, line_results_path)
+ 
+                stem     = diagram_name.replace(".png", "")
+                out_path = os.path.join(self.results_dir, f"{stem}_final.json")
+ 
+                with open(out_path, "w") as f:
+                    json.dump(final, f, indent=2)
+ 
+                print(f"  ✓ {len(final['devices'])} devices, "
+                    f"{len(final['connections'])} connections → {out_path}")
+                processed += 1
+ 
+            except Exception as e:
+                import traceback
+                msg = f"Stage 5 failed for {diagram_name}: {e}"
+                print(f"  ✗ {msg}")
+                self.pipeline_summary["errors"].append(msg + "\n" + traceback.format_exc())
+ 
+        self.pipeline_summary["stages_completed"].append("final_json")
+        print(f"\n✓ Stage 5 complete: {processed} final JSON(s) written to {self.results_dir}")
+        return processed
+
+    def aggregate_results(self) -> dict:
+
+    # ── stage 5: collect per-diagram final-json stats ────────────────────
+        final_json_files = []
+        total_final_devices = 0
+        total_final_connections = 0
+
+        for diagram_name in self.line_extraction_results:
+            stem = diagram_name.replace(".png", "")
+            out_path = os.path.join(self.results_dir, f"{stem}_final.json")
+            if os.path.exists(out_path):
+                try:
+                    with open(out_path) as f:
+                        data = json.load(f)
+                    total_final_devices     += len(data.get("devices", []))
+                    total_final_connections += len(data.get("connections", []))
+                    final_json_files.append(out_path)
+                except Exception:
+                    pass
+
         summary = {
             "metadata": {
-                "timestamp": self.timestamp,
+                "timestamp":        self.timestamp,
                 "stages_completed": self.pipeline_summary["stages_completed"],
-                "total_diagrams": self.pipeline_summary["total_diagrams"],
-                "errors_count": len(self.pipeline_summary["errors"]),
+                "total_diagrams":   self.pipeline_summary["total_diagrams"],
+                "errors_count":     len(self.pipeline_summary["errors"]),
             },
             "generation": {
-                "total": self.generation_results.get("count", 0),
+                "total":      self.generation_results.get("count", 0),
                 "standalone": self.generation_results.get("standalone", 0),
-                "hybrid": self.generation_results.get("hybrid", 0),
+                "hybrid":     self.generation_results.get("hybrid", 0),
             },
             "symbol_detection": {
                 "total_processed": sum(1 for r in self.symbol_detection_results.values() if r.get("success")),
-                "total_failed": sum(1 for r in self.symbol_detection_results.values() if not r.get("success")),
-                "total_symbols": sum(r.get("symbols", 0) for r in self.symbol_detection_results.values()),
-                "total_matches": sum(r.get("matches", 0) for r in self.symbol_detection_results.values()),
+                "total_failed":    sum(1 for r in self.symbol_detection_results.values() if not r.get("success")),
+                "total_symbols":   sum(r.get("symbols", 0) for r in self.symbol_detection_results.values()),
+                "total_matches":   sum(r.get("matches", 0) for r in self.symbol_detection_results.values()),
             },
             "line_extraction": {
-                "total_processed": sum(1 for r in self.line_extraction_results.values() if r.get("success")),
-                "total_failed": sum(1 for r in self.line_extraction_results.values() if not r.get("success")),
-                "total_components": sum(r.get("components", 0) for r in self.line_extraction_results.values()),
-                "total_lines": sum(r.get("line_segments", 0) for r in self.line_extraction_results.values()),
-                "total_connections": sum(r.get("connections", 0) for r in self.line_extraction_results.values()),
+                "total_processed":  sum(1 for r in self.line_extraction_results.values() if r.get("success")),
+                "total_failed":     sum(1 for r in self.line_extraction_results.values() if not r.get("success")),
+                "total_components": sum(r.get("components", 0)    for r in self.line_extraction_results.values()),
+                "total_lines":      sum(r.get("line_segments", 0) for r in self.line_extraction_results.values()),
+                "total_connections":sum(r.get("connections", 0)   for r in self.line_extraction_results.values()),
             },
-            "errors": self.pipeline_summary["errors"]
+        # ── new ──────────────────────────────────────────────────────────
+            "final_json": {
+                "total_produced":       len(final_json_files),
+                "total_devices":        total_final_devices,
+                "total_connections":    total_final_connections,
+                "output_files":         final_json_files,
+            },
+        "errors": self.pipeline_summary["errors"],
         }
-        
-        # Save summary
+
+    # Save summary
         summary_path = os.path.join(self.results_dir, "pipeline_summary.json")
         with open(summary_path, "w") as f:
             json.dump(summary, f, indent=2)
-        
-        # Save detailed results
+
+    # Save detailed results
         details_path = os.path.join(self.results_dir, "pipeline_details.json")
         with open(details_path, "w") as f:
             json.dump({
                 "symbol_detection_detailed": self.symbol_detection_results,
-                "line_extraction_detailed": self.line_extraction_results,
+                "line_extraction_detailed":  self.line_extraction_results,
+                "final_json_files":          final_json_files,
             }, f, indent=2)
-        
-        print(f"\n✓ Results aggregated and saved")
+
+        print(f"\n✓ Results aggregated and saved to {self.results_dir}")
         return summary
-    
+
+
     def print_summary(self, summary: dict) -> None:
-        """Print human-readable summary."""
         print("\n" + "=" * 80)
         print("PIPELINE SUMMARY")
         print("=" * 80)
-        
+
         meta = summary["metadata"]
-        print(f"\nTimestamp: {meta['timestamp']}")
+        print(f"\nTimestamp:        {meta['timestamp']}")
         print(f"Stages completed: {', '.join(meta['stages_completed'])}")
-        print(f"Total diagrams: {meta['total_diagrams']}")
-        
+        print(f"Total diagrams:   {meta['total_diagrams']}")
+
         gen = summary["generation"]
         print(f"\n📊 Generation:")
-        print(f"  Total: {gen['total']}")
+        print(f"  Total:      {gen['total']}")
         print(f"  Standalone: {gen['standalone']}")
-        print(f"  Hybrid: {gen['hybrid']}")
-        
+        print(f"  Hybrid:     {gen['hybrid']}")
+
         sym = summary["symbol_detection"]
         print(f"\n🔍 Symbol Detection:")
-        print(f"  Processed: {sym['total_processed']}")
-        print(f"  Failed: {sym['total_failed']}")
-        print(f"  Total symbols detected: {sym['total_symbols']}")
-        print(f"  Total matches: {sym['total_matches']}")
-        
+        print(f"  Processed:        {sym['total_processed']}")
+        print(f"  Failed:           {sym['total_failed']}")
+        print(f"  Symbols detected: {sym['total_symbols']}")
+        print(f"  Text matches:     {sym['total_matches']}")
+
         lines = summary["line_extraction"]
         print(f"\n📍 Line Extraction:")
-        print(f"  Processed: {lines['total_processed']}")
-        print(f"  Failed: {lines['total_failed']}")
-        print(f"  Total components: {lines['total_components']}")
-        print(f"  Total line segments: {lines['total_lines']}")
-        print(f"  Total connections: {lines['total_connections']}")
-        
+        print(f"  Processed:   {lines['total_processed']}")
+        print(f"  Failed:      {lines['total_failed']}")
+        print(f"  Components:  {lines['total_components']}")
+        print(f"  Line segs:   {lines['total_lines']}")
+        print(f"  Connections: {lines['total_connections']}")
+
+    # ── new ──────────────────────────────────────────────────────────────
+        fj = summary.get("final_json", {})
+        print(f"\n✅ Final JSON:")
+        print(f"  Files produced:  {fj.get('total_produced', 0)}")
+        print(f"  Total devices:   {fj.get('total_devices', 0)}")
+        print(f"  Total connections: {fj.get('total_connections', 0)}")
+        if fj.get("output_files"):
+            for p in fj["output_files"]:
+                print(f"    → {p}")
+
         if summary["errors"]:
-            print(f"\n⚠ Errors ({len(summary['errors'])}):")
+            print(f"\n⚠  Errors ({len(summary['errors'])}):")
             for err in summary["errors"]:
                 print(f"  - {err}")
-        
+
         print("\n" + "=" * 80)
         print(f"Output directory: {self.output_dir}")
         print("=" * 80 + "\n")
 
-
 # ─────────────────────────────────────────────────────────────────────────────
-# MAIN ENTRY POINT
+# UPDATED main()  (replace the existing main() in full_pipeline.py)
 # ─────────────────────────────────────────────────────────────────────────────
 
 def main():
     parser = argparse.ArgumentParser(
-        description="Full SLD analysis pipeline: Generate → Detect → Extract Lines",
+        description="Full SLD analysis pipeline: Generate → Detect → Extract → Final JSON",
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
     )
-    
-    parser.add_argument(
+ 
+    # ── input: one of three options ───────────────────────────────────────
+    input_group = parser.add_mutually_exclusive_group()
+    input_group.add_argument(
+        "--image",
+        default=None,
+        metavar="PATH",
+        help="Path to a single PNG to process. Skips Stage 1.",
+    )
+    input_group.add_argument(
+        "--images-dir",
+        default=None,
+        metavar="DIR",
+        help="Path to a folder of PNGs to process. Skips Stage 1.",
+    )
+    input_group.add_argument(
         "--diagrams",
         type=int,
-        default=3,
-        help="Total diagrams to generate (split between standalone and hybrid)",
-    )
-    parser.add_argument(
-        "--standalone-only",
-        action="store_true",
-        help="Generate only standalone diagrams",
-    )
-    parser.add_argument(
-        "--hybrid-only",
-        action="store_true",
-        help="Generate only hybrid diagrams",
-    )
-    parser.add_argument(
-        "--output",
-        default="pipeline_output",
-        help="Output directory for all results",
-    )
-    parser.add_argument(
-        "--skip-symbol-detection",
-        action="store_true",
-        help="Skip symbol detection stage",
-    )
-    parser.add_argument(
-        "--skip-line-extraction",
-        action="store_true",
-        help="Skip line extraction stage",
-    )
-    parser.add_argument(
-        "--model",
         default=None,
-        help="Path to YOLO model (uses default if not specified)",
+        metavar="N",
+        help="Number of diagrams to generate (runs Stage 1).",
     )
-    parser.add_argument(
-        "--conf",
-        type=float,
-        default=0.2,
-        help="Detection confidence threshold",
-    )
-    
+ 
+    parser.add_argument("--standalone-only", action="store_true")
+    parser.add_argument("--hybrid-only",     action="store_true")
+    parser.add_argument("--output",          default="pipeline_output")
+    parser.add_argument("--skip-symbol-detection", action="store_true")
+    parser.add_argument("--skip-line-extraction",  action="store_true")
+    parser.add_argument("--skip-final-json",       action="store_true")
+    parser.add_argument("--model", default=None)
+    parser.add_argument("--conf",  type=float, default=0.2)
+ 
     args = parser.parse_args()
-    
-    # Initialize pipeline
+ 
     pipeline = FullPipeline(output_dir=args.output)
-    
-    # Stage 1: Generation
-    half = args.diagrams // 2
-    standalone_samples = half if not args.hybrid_only else (args.diagrams if args.standalone_only else 0)
-    hybrid_samples = half if not args.standalone_only else (args.diagrams if args.hybrid_only else 0)
-    
-    total_diagrams = pipeline.stage1_generate(
-        standalone_samples=standalone_samples,
-        hybrid_samples=hybrid_samples
-    )
-    
-    if total_diagrams == 0:
-        print("\n✗ Pipeline failed at generation stage")
+ 
+    # ── Stage 1 (or skip) ─────────────────────────────────────────────────
+    if args.image:
+        # single file
+        image_path = os.path.abspath(args.image)
+        if not os.path.isfile(image_path):
+            print(f"✗ Image not found: {image_path}")
+            return 1
+        total = pipeline.load_existing_images([image_path])
+ 
+    elif args.images_dir:
+        # whole folder
+        images_dir = os.path.abspath(args.images_dir)
+        if not os.path.isdir(images_dir):
+            print(f"✗ Directory not found: {images_dir}")
+            return 1
+        pngs = sorted([
+            os.path.join(images_dir, f)
+            for f in os.listdir(images_dir)
+            if f.lower().endswith(".png")
+        ])
+        total = pipeline.load_existing_images(pngs)
+ 
+    else:
+        # generate fresh diagrams
+        n = args.diagrams if args.diagrams is not None else 3
+        half = n // 2
+        standalone = 0 if args.hybrid_only    else (n if args.standalone_only else half)
+        hybrid     = 0 if args.standalone_only else (n if args.hybrid_only    else half)
+        total = pipeline.stage1_generate(
+            standalone_samples=standalone,
+            hybrid_samples=hybrid,
+        )
+ 
+    if total == 0:
+        print("\n✗ No images to process — exiting.")
         return 1
-    
-    # Stage 2: Symbol Detection
+
+    # Stage 2
     if not args.skip_symbol_detection:
         pipeline.stage2_detect_symbols(model_path=args.model, conf=args.conf)
-    
-    # Stage 3: Line Extraction
+
+    # Stage 3
     if not args.skip_line_extraction:
         pipeline.stage3_extract_lines(model_path=args.model, conf=args.conf)
-    
-    # Stage 4: Merge Connectivity
+
+    # Stage 4
     if not args.skip_line_extraction and not args.skip_symbol_detection:
         pipeline.stage4_merge_connectivity()
-    
-    # Aggregate and display results
+
+    # Stage 5  ← new
+    if not args.skip_final_json and not args.skip_line_extraction and not args.skip_symbol_detection:
+        pipeline.stage5_generate_final_json()
+
     summary = pipeline.aggregate_results()
     pipeline.print_summary(summary)
-    
     return 0
-
+    
+    
 
 if __name__ == "__main__":
     sys.exit(main())
