@@ -159,6 +159,10 @@ def convert_devices_to_domain(devices):
         elif "GEN" in label:
             num    = re.search(r'GEN-(\d+)', label)
             new_id = f"GS_{num.group(1)}" if num else "GS_X"
+            
+        elif "FDR" in label:
+            num = re.search(r'FDR-(\d+)', label)
+            new_id = f"FDR_{num.group(1)}" if num else "FDR_X"
 
         else:
             new_id = old_id  # keep DEV_N if label matches no pattern
