@@ -1,6 +1,6 @@
 # SLD-JSON
 
-This program is meant to convert Single Line Diagrams (electrical diagrams) into a standardised JSON format. This program is undergoing integrations, but has approached runnable capabailities. This is currently limited, and open for developer assistance, mainly because it currently works for clean diagrams, performance on messy diagrams is limited. It is meant to aid exports to AM, GIS and SCADA systems 
+This program is meant to convert Single Line Diagrams (electrical diagrams) into a standardised JSON format. This program is undergoing integrations, but has approached runnable capabilities. This is currently limited, and open for developer assistance, mainly because it currently works for clean diagrams, performance on messy diagrams is limited. It is meant to aid exports to AM, GIS and SCADA systems 
 
 ## diagram_service.py
 
